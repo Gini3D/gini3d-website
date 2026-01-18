@@ -1,65 +1,137 @@
-import Image from "next/image";
+'use client';
+
+import { useMemo, useState } from 'react';
+
+import { Filter, Heart, Search } from 'lucide-react';
+
+import { HeroSection } from '@/components/HeroSection';
+import { ProductGrid } from '@/components/ProductGrid';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+
+import { useProducts } from '@/hooks/useProducts';
+
+import { filterProductsBySearch } from '@/lib/productUtils';
+import { FEATURED_SELLERS } from '@/lib/types';
 
 export default function Home() {
+  // Only show products from whitelisted sellers
+  const { products, loading, error } = useProducts({ sellers: FEATURED_SELLERS });
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredProducts = useMemo(() => {
+    return filterProductsBySearch(products, searchTerm);
+  }, [products, searchTerm]);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+    <div>
+      {/* Hero Section */}
+      <HeroSection />
+
+      {/* Products Section */}
+      <section id="products" className="py-12 md:py-16">
+        <div className="container mx-auto px-4">
+          {/* Section Header */}
+          <div className="mb-8 text-center">
+            <h2 className="font-elegance text-foreground mb-2 text-3xl font-semibold md:text-4xl">
+              <span className="heart-decoration">Our Products</span>
+            </h2>
+            <p className="font-elegance text-foreground/60 mx-auto max-w-lg">
+              Browse our collection of adorable 3D printed creations and products from featured
+              sellers on Nostr
+            </p>
+          </div>
+
+          {/* Search & Filter Bar */}
+          <div className="mx-auto mb-8 flex max-w-2xl flex-col gap-4 sm:flex-row">
+            <div className="relative flex-1">
+              <Search className="text-foreground/40 absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+              <Input
+                type="search"
+                placeholder="Search products..."
+                className="border-gini-200 focus:border-primary font-elegance pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <Button
+              variant="outline"
+              className="border-gini-200 text-foreground/70 hover:bg-gini-50 font-elegance"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              <Filter className="mr-2 h-4 w-4" />
+              Filter
+            </Button>
+          </div>
+
+          {/* Product Grid */}
+          <ProductGrid products={filteredProducts} loading={loading} error={error} />
+
+          {/* More Products Link */}
+          {filteredProducts.length > 0 && !loading && (
+            <div className="mt-12 text-center">
+              <p className="font-elegance text-foreground/60 mb-4">More products coming soon!</p>
+              <div className="flex justify-center gap-2 text-2xl">
+                <span className="animate-pulse">💖</span>
+                <span className="animate-pulse" style={{ animationDelay: '0.2s' }}>
+                  🐹
+                </span>
+                <span className="animate-pulse" style={{ animationDelay: '0.4s' }}>
+                  💖
+                </span>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Featured Categories (placeholder for future) */}
+      <section className="bg-gini-gradient py-12">
+        <div className="container mx-auto px-4">
+          <h2 className="font-elegance text-foreground mb-8 text-center text-2xl font-semibold md:text-3xl">
+            <span className="heart-decoration">Popular Categories</span>
+          </h2>
+
+          <div className="mx-auto grid max-w-3xl grid-cols-2 gap-4 md:grid-cols-4">
+            {[
+              { name: 'Keychains', emoji: '🔑', color: 'bg-pink-100' },
+              { name: 'Figurines', emoji: '🎨', color: 'bg-purple-100' },
+              { name: 'Phone Cases', emoji: '📱', color: 'bg-blue-100' },
+              { name: 'Home Decor', emoji: '🏠', color: 'bg-green-100' },
+            ].map((category) => (
+              <button
+                key={category.name}
+                className={`${category.color} hover-lift rounded-xl border border-white/50 p-6 text-center`}
+              >
+                <div className="mb-2 text-3xl">{category.emoji}</div>
+                <span className="font-elegance text-foreground/80">{category.name}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* About Teaser */}
+      <section className="py-12">
+        <div className="container mx-auto px-4">
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="mb-4 text-5xl">🐹🐹</div>
+            <h2 className="font-elegance text-foreground mb-4 text-2xl font-semibold md:text-3xl">
+              Meet Nini & Gabby
+            </h2>
+            <p className="font-elegance text-foreground/70 mb-6">
+              We're two 10-year-old best friends who love guinea pigs and creating cute things! We
+              started Gini3D to share our 3D printed creations with the world.
+            </p>
+            <Button
+              variant="outline"
+              className="border-primary text-primary hover:bg-gini-50 font-elegance"
             >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+              <Heart className="mr-2 h-4 w-4" />
+              Learn More About Us
+            </Button>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
     </div>
   );
 }

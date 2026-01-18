@@ -1,26 +1,378 @@
-@import "tailwindcss";
+/* Google Fonts - must be first */
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Pacifico&family=Comic+Neue:wght@400;700&display=swap');
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-fun: 'Fredoka', sans-serif;
+  --font-logo: 'Pacifico', cursive;
+  --font-body: 'Comic Neue', cursive;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Funky Bright Colors! */
+  --color-gini-50: #fff0f7;
+  --color-gini-100: #ffe4f0;
+  --color-gini-200: #ffc9e2;
+  --color-gini-300: #ff8ec7;
+  --color-gini-400: #ff5eb3;
+  --color-gini-500: #ff1493;
+  --color-gini-600: #e60073;
+  --color-gini-cream: #fffaf0;
+  --color-gini-heart: #ff1493;
+  --color-gini-yellow: #ffd700;
+  --color-gini-purple: #9b59b6;
+  --color-gini-mint: #00d4aa;
+  --color-gini-orange: #ff6b35;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 1rem;
+  /* Bright cheerful background */
+  --background: oklch(0.98 0.02 350);
+  --foreground: oklch(0.25 0.05 320);
+  /* Colorful cards */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.25 0.05 320);
+  --popover: oklch(1 0.02 350);
+  --popover-foreground: oklch(0.25 0.05 320);
+  /* HOT PINK primary! */
+  --primary: oklch(0.6 0.3 350);
+  --primary-foreground: oklch(1 0 0);
+  /* Light pink secondary */
+  --secondary: oklch(0.95 0.06 350);
+  --secondary-foreground: oklch(0.35 0.1 350);
+  /* Muted tones */
+  --muted: oklch(0.96 0.04 350);
+  --muted-foreground: oklch(0.45 0.05 320);
+  /* Bright accent */
+  --accent: oklch(0.88 0.12 350);
+  --accent-foreground: oklch(0.35 0.1 350);
+  --destructive: oklch(0.577 0.245 27.325);
+  /* Colorful borders */
+  --border: oklch(0.88 0.08 350);
+  --input: oklch(0.92 0.05 350);
+  --ring: oklch(0.6 0.25 350);
+  --chart-1: oklch(0.6 0.3 350);
+  --chart-2: oklch(0.7 0.2 300);
+  --chart-3: oklch(0.65 0.2 60);
+  --chart-4: oklch(0.7 0.15 180);
+  --chart-5: oklch(0.75 0.2 280);
+  --sidebar: oklch(0.98 0.03 350);
+  --sidebar-foreground: oklch(0.25 0.05 320);
+  --sidebar-primary: oklch(0.6 0.3 350);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: oklch(0.92 0.08 350);
+  --sidebar-accent-foreground: oklch(0.35 0.1 350);
+  --sidebar-border: oklch(0.88 0.08 350);
+  --sidebar-ring: oklch(0.6 0.25 350);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Comic Neue', cursive;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom utility classes for Gini3D */
+@layer utilities {
+  .font-elegance {
+    font-family: 'Fredoka', sans-serif;
+  }
+
+  .font-logo {
+    font-family: 'Pacifico', cursive;
+  }
+
+  .font-fun {
+    font-family: 'Fredoka', sans-serif;
+  }
+
+  .bg-gini-gradient {
+    background: linear-gradient(
+      135deg,
+      #fff0f7 0%,
+      #ffe4f0 25%,
+      #ffc9e2 50%,
+      #e0f4ff 75%,
+      #f0fff4 100%
+    );
+  }
+
+  .bg-rainbow-gradient {
+    background: linear-gradient(
+      90deg,
+      #ff6b6b 0%,
+      #ffd93d 17%,
+      #6bcb77 33%,
+      #4d96ff 50%,
+      #9b59b6 67%,
+      #ff6b9d 83%,
+      #ff6b6b 100%
+    );
+    background-size: 200% 200%;
+    animation: rainbow-shift 3s ease infinite;
+  }
+
+  .text-gini-pink {
+    color: #ff1493;
+  }
+
+  .bg-gini-pink {
+    background-color: #ff1493;
+  }
+
+  .border-gini-pink {
+    border-color: #ff8ec7;
+  }
+
+  .shadow-gini {
+    box-shadow:
+      0 4px 20px -2px rgba(255, 20, 147, 0.3),
+      0 0 40px -10px rgba(255, 107, 157, 0.2);
+  }
+
+  .shadow-rainbow {
+    box-shadow:
+      0 4px 15px -2px rgba(255, 107, 107, 0.3),
+      0 4px 15px -2px rgba(255, 217, 61, 0.3),
+      0 4px 15px -2px rgba(107, 203, 119, 0.3),
+      0 4px 15px -2px rgba(77, 150, 255, 0.3);
+  }
+
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+      0 12px 40px -8px rgba(255, 20, 147, 0.4),
+      0 0 60px -15px rgba(255, 107, 157, 0.3);
+  }
+
+  .wiggle {
+    animation: wiggle 1s ease-in-out infinite;
+  }
+
+  .sparkle {
+    animation: sparkle 1.5s ease-in-out infinite;
+  }
+
+  .float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .bounce-fun {
+    animation: bounce-fun 0.6s ease infinite;
+  }
+}
+
+/* Fun Animations */
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(3deg);
+  }
+}
+
+@keyframes sparkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes bounce-fun {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes rainbow-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Heart decoration pseudo-element */
+.heart-decoration::before {
+  content: '💖';
+  margin-right: 0.5rem;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+.heart-decoration::after {
+  content: '💖';
+  margin-left: 0.5rem;
+  animation: sparkle 1.5s ease-in-out infinite 0.3s;
+}
+
+/* Bow decoration */
+.bow-decoration {
+  position: relative;
+}
+
+.bow-decoration::before {
+  content: '🎀';
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  font-size: 1.5rem;
+  animation: wiggle 2s ease-in-out infinite;
+}
+
+/* Confetti background effect */
+.confetti-bg {
+  position: relative;
+  overflow: hidden;
+}
+
+.confetti-bg::before {
+  content: '✨ 🌟 💫 ⭐ 🎀 💖 🐹';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 2rem;
+  opacity: 0.1;
+  letter-spacing: 2rem;
+  line-height: 4rem;
+  pointer-events: none;
+  animation: float 5s ease-in-out infinite;
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(90deg, #ff1493, #9b59b6, #4d96ff, #00d4aa);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbow-shift 4s ease infinite;
+}
+
+/* Fun button styles */
+.btn-fun {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-fun::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition:
+    width 0.6s ease,
+    height 0.6s ease;
+}
+
+.btn-fun:hover::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Cute card borders */
+.card-cute {
+  border: 3px solid transparent;
+  background:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(135deg, #ff1493, #9b59b6, #4d96ff) border-box;
+}
+
+/* Sparkle cursor effect on hover */
+.sparkle-hover {
+  cursor:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext x='0' y='24' font-size='24'%3E✨%3C/text%3E%3C/svg%3E"),
+    auto;
 }
