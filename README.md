@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+```
+   _____ _       _ _____ _____
+  / ____(_)     (_)____ |  __ \
+ | |  __ _ _ __  _    / | |  | |
+ | | |_ | | '_ \| |   / /| |  | |
+ | |__| | | | | | |  / /_| |__| |
+  \_____|_|_| |_|_| |____|_____/
+
+```
+
+# Gini3D - Adorable 3D Printed Creations
+
+A cute 3D print marketplace run by **Nini & Gabby** (two 10-year-old best friends who love guinea pigs!). Built on [Nostr](https://nostr.com) with Bitcoin Lightning payments.
+
+## Features
+
+- **NIP-99 Product Listings** - Decentralized product catalog from Nostr relays
+- **Bitcoin Lightning Payments** - Fast, low-fee payments via Lightning Network
+- **NIP-07 Login** - Sign in with browser extensions (Alby, nos2x)
+- **Pre-selected Sellers** - Curated 3D printing specialists on Nostr
+- **Gamma Markets Checkout** - Kind 16/17 order processing
+
+## Tech Stack
+
+- **Framework**: Next.js 14+ (App Router)
+- **Styling**: TailwindCSS + shadcn/ui
+- **Nostr**: nostr-tools
+- **Protocol**: NIP-99 (kind 30402) + Gamma Markets spec
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+# Install dependencies
+bun install
+
+# Run development server
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the site.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Featured Sellers
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+We feature pre-selected sellers who specialize in 3D printing on Nostr:
 
-## Learn More
+- **Gini3D** - Cute & Colorful Prints (by Nini & Gabby)
+- **Robotechy** - Bitcoin Hardware & 3D Prints (by Isaac, 15)
+- **Plebeian Market** - Nostr Marketplace
 
-To learn more about Next.js, take a look at the following resources:
+Want to sell on Gini3D? [Contact us](/contact)!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment Variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Create a `.env.local` file:
 
-## Deploy on Vercel
+```env
+NEXT_PUBLIC_GINI3D_NPUB=your_npub_here
+NEXT_PUBLIC_GINI3D_PUBKEY=your_hex_pubkey_here
+NEXT_PUBLIC_SELLER_WHITELIST=pubkey1,pubkey2,pubkey3
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## License
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+MIT
+
+---
+
+Made with love by Nini & Gabby
