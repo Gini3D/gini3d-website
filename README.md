@@ -1,10 +1,10 @@
-```
-  ____  _       _  _____ ____
- / ___|(_)_ __ (_)|___ /|  _ \
-| |  _ | | '_ \| |  |_ \| | | |
-| |_| || | | | | | ___) | |_| |
- \____||_|_| |_|_||____/|____/
-```
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="assets/logo.svg">
+    <source media="(prefers-color-scheme: light)" srcset="assets/logo.svg">
+    <img alt="Gini3D" src="assets/logo.svg" width="600">
+  </picture>
+</p>
 
 # Gini3D - Adorable 3D Printed Creations
 
