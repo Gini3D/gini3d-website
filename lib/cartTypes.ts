@@ -14,7 +14,32 @@ export interface CartState {
   updatedAt: number;
 }
 
-// Shipping information for checkout
+// NIP-15 Stall shipping zone (from kind 30017 stall event)
+export interface StallShippingZone {
+  id: string; // Shipping zone ID
+  name?: string; // Zone name (e.g., "United Kingdom", "Worldwide")
+  cost: number; // Base shipping cost in stall currency
+  regions?: string[]; // Regions included in this zone
+}
+
+// NIP-15 Stall data (kind 30017)
+export interface Stall {
+  id: string; // Stall d-tag
+  pubkey: string; // Merchant pubkey
+  name: string;
+  description?: string;
+  currency: string; // Currency used for prices (e.g., "GBP", "sats")
+  shipping: StallShippingZone[];
+}
+
+// Per-seller shipping selection during checkout
+export interface SellerShippingSelection {
+  sellerPubkey: string;
+  shippingZoneId: string; // Selected shipping zone ID from stall
+  shippingCost: number; // Cost in stall currency
+}
+
+// Shipping information for checkout (per-seller)
 export interface ShippingInfo {
   name: string;
   email: string;
@@ -24,7 +49,7 @@ export interface ShippingInfo {
   state: string;
   postalCode: string;
   country: string;
-  shippingZone: string; // Shipping zone ID (us, worldwide)
+  sellerShipping: SellerShippingSelection[]; // Shipping selection per seller
   message?: string; // Optional note to merchant
 }
 

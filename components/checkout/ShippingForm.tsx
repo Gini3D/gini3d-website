@@ -1,8 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import { Loader2, MapPin } from 'lucide-react';
+import Image from 'next/image';
+
+import { Loader2, MapPin, Package, Store, Zap } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -16,22 +18,36 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 
-import type { ShippingInfo } from '@/lib/cartTypes';
+import type { SellerShippingSelection, ShippingInfo, StallShippingZone } from '@/lib/cartTypes';
+import type { SellerOrder } from '@/lib/productUtils';
 
 interface ShippingFormProps {
   onSubmit: (data: ShippingInfo) => void;
   isSubmitting: boolean;
+  sellerOrders: SellerOrder[];
+  getSellerShipping: (pubkey: string) => StallShippingZone[];
+  getSellerCurrency: (pubkey: string) => string;
+  convertToSats: (amount: number, currency: string) => number;
+  onTotalChange: (totalSats: number) => void;
 }
 
-const SHIPPING_ZONES = [
-  { id: 'us', label: 'United States', price: '0', currency: 'USD' },
-  { id: 'canada', label: 'Canada', price: '5', currency: 'USD' },
-  { id: 'worldwide', label: 'Worldwide', price: '15', currency: 'USD' },
+// Default shipping zones when seller has no stall defined
+const DEFAULT_SHIPPING_ZONES: StallShippingZone[] = [
+  { id: 'uk', name: 'United Kingdom', cost: 3.50, regions: ['UK', 'GB'] },
+  { id: 'eu', name: 'Europe', cost: 8.00, regions: ['EU'] },
+  { id: 'worldwide', name: 'Worldwide', cost: 15.00, regions: ['*'] },
 ];
 
-export function ShippingForm({ onSubmit, isSubmitting }: ShippingFormProps) {
+export function ShippingForm({
+  onSubmit,
+  isSubmitting,
+  sellerOrders,
+  getSellerShipping,
+  getSellerCurrency,
+  convertToSats,
+  onTotalChange,
+}: ShippingFormProps) {
   const [formData, setFormData] = useState({
-    shippingZone: 'us',
     name: '',
     email: '',
     phone: '',
@@ -42,13 +58,71 @@ export function ShippingForm({ onSubmit, isSubmitting }: ShippingFormProps) {
     country: '',
     message: '',
   });
+
+  // Track selected shipping per seller
+  const [sellerShippingSelections, setSellerShippingSelections] = useState<
+    Record<string, { zoneId: string; cost: number; currency: string }>
+  >({});
+
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Get shipping options for a seller (from stall or defaults)
+  const getShippingOptions = (pubkey: string): StallShippingZone[] => {
+    const stallShipping = getSellerShipping(pubkey);
+    if (stallShipping.length > 0) {
+      return stallShipping;
+    }
+    // Return defaults if seller has no stall with shipping
+    return DEFAULT_SHIPPING_ZONES;
+  };
+
+  // Calculate totals when shipping selections change
+  useEffect(() => {
+    let totalSats = 0;
+
+    for (const order of sellerOrders) {
+      // Add item subtotal
+      totalSats += order.subtotalSats;
+
+      // Add shipping if selected
+      const selection = sellerShippingSelections[order.sellerPubkey];
+      if (selection) {
+        const shippingSats = convertToSats(selection.cost, selection.currency);
+        totalSats += shippingSats;
+      }
+    }
+
+    onTotalChange(totalSats);
+  }, [sellerOrders, sellerShippingSelections, convertToSats, onTotalChange]);
+
+  const handleShippingChange = (pubkey: string, zoneId: string) => {
+    const options = getShippingOptions(pubkey);
+    const zone = options.find((z) => z.id === zoneId);
+    const currency = getSellerCurrency(pubkey) || 'GBP';
+
+    setSellerShippingSelections((prev) => ({
+      ...prev,
+      [pubkey]: {
+        zoneId,
+        cost: zone?.cost || 0,
+        currency,
+      },
+    }));
+
+    // Clear error if exists
+    if (errors[`shipping_${pubkey}`]) {
+      setErrors((prev) => ({ ...prev, [`shipping_${pubkey}`]: '' }));
+    }
+  };
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.shippingZone) {
-      newErrors.shippingZone = 'Please select a shipping zone';
+    // Validate shipping selection for each seller
+    for (const order of sellerOrders) {
+      if (!sellerShippingSelections[order.sellerPubkey]) {
+        newErrors[`shipping_${order.sellerPubkey}`] = 'Please select a shipping option';
+      }
     }
 
     // Email is optional but must be valid if provided
@@ -67,6 +141,16 @@ export function ShippingForm({ onSubmit, isSubmitting }: ShippingFormProps) {
       return;
     }
 
+    // Build per-seller shipping selections
+    const sellerShipping: SellerShippingSelection[] = sellerOrders.map((order) => {
+      const selection = sellerShippingSelections[order.sellerPubkey];
+      return {
+        sellerPubkey: order.sellerPubkey,
+        shippingZoneId: selection?.zoneId || '',
+        shippingCost: selection?.cost || 0,
+      };
+    });
+
     const shippingInfo: ShippingInfo = {
       name: formData.name,
       email: formData.email,
@@ -76,7 +160,7 @@ export function ShippingForm({ onSubmit, isSubmitting }: ShippingFormProps) {
       state: formData.state,
       postalCode: formData.postalCode,
       country: formData.country,
-      shippingZone: formData.shippingZone,
+      sellerShipping,
       message: formData.message || undefined,
     };
 
@@ -85,35 +169,136 @@ export function ShippingForm({ onSubmit, isSubmitting }: ShippingFormProps) {
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
-    // Clear error when user starts typing
     if (errors[field]) {
       setErrors((prev) => ({ ...prev, [field]: '' }));
     }
   };
 
+  const formatPrice = (amount: number, currency: string) => {
+    const currLower = currency.toLowerCase();
+    if (currLower === 'sats' || currLower === 'sat') {
+      return `${amount.toLocaleString()} sats`;
+    }
+    if (currLower === 'gbp' || currency === '£') {
+      return `£${amount.toFixed(2)}`;
+    }
+    if (currLower === 'eur' || currency === '€') {
+      return `€${amount.toFixed(2)}`;
+    }
+    return `$${amount.toFixed(2)}`;
+  };
+
+  const formatSats = (sats: number) => `${Math.round(sats).toLocaleString()} sats`;
+
+  // Calculate total sats for display
+  const calculateTotal = () => {
+    let subtotalSats = 0;
+    let shippingSats = 0;
+
+    for (const order of sellerOrders) {
+      subtotalSats += order.subtotalSats;
+      const selection = sellerShippingSelections[order.sellerPubkey];
+      if (selection) {
+        shippingSats += convertToSats(selection.cost, selection.currency);
+      }
+    }
+
+    return { subtotalSats, shippingSats, totalSats: subtotalSats + shippingSats };
+  };
+
+  const totals = calculateTotal();
+
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Shipping Zone */}
-      <div className="space-y-2">
-        <Label htmlFor="shippingZone" className="font-fun">
-          Shipping Zone *
-        </Label>
-        <Select
-          value={formData.shippingZone}
-          onValueChange={(value) => handleChange('shippingZone', value)}
-        >
-          <SelectTrigger className={errors.shippingZone ? 'border-red-500' : ''}>
-            <SelectValue placeholder="Select shipping zone" />
-          </SelectTrigger>
-          <SelectContent>
-            {SHIPPING_ZONES.map((zone) => (
-              <SelectItem key={zone.id} value={zone.id}>
-                {zone.label} - {zone.price === '0' ? 'Free' : `$${zone.price}`}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        {errors.shippingZone && <p className="text-sm text-red-500">{errors.shippingZone}</p>}
+      {/* Per-Seller Shipping Selection */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-2">
+          <Package className="h-4 w-4 text-pink-500" />
+          <h3 className="font-fun text-lg font-medium">Shipping Options</h3>
+        </div>
+
+        {sellerOrders.map((order) => {
+          const shippingOptions = getShippingOptions(order.sellerPubkey);
+          const currency = getSellerCurrency(order.sellerPubkey) || 'GBP';
+          const selection = sellerShippingSelections[order.sellerPubkey];
+          const errorKey = `shipping_${order.sellerPubkey}`;
+
+          return (
+            <div
+              key={order.sellerPubkey}
+              className="border border-gini-200 rounded-lg p-3 space-y-2"
+            >
+              {/* Seller header */}
+              <div className="flex items-center gap-2 mb-2">
+                {order.sellerPicture ? (
+                  <Image
+                    src={order.sellerPicture}
+                    alt={order.sellerName}
+                    width={20}
+                    height={20}
+                    className="rounded-full"
+                    unoptimized
+                  />
+                ) : (
+                  <Store className="h-4 w-4 text-gini-500" />
+                )}
+                <span className="font-fun text-sm font-medium">{order.sellerName}</span>
+                <span className="text-muted-foreground text-xs ml-auto">
+                  {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
+                </span>
+              </div>
+
+              {/* Shipping dropdown */}
+              <Select
+                value={selection?.zoneId || ''}
+                onValueChange={(value) => handleShippingChange(order.sellerPubkey, value)}
+              >
+                <SelectTrigger className={errors[errorKey] ? 'border-red-500' : ''}>
+                  <SelectValue placeholder="Select shipping option" />
+                </SelectTrigger>
+                <SelectContent>
+                  {shippingOptions.map((zone) => (
+                    <SelectItem key={zone.id} value={zone.id}>
+                      {zone.name || zone.id} - {zone.cost === 0 ? 'Free' : formatPrice(zone.cost, currency)}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors[errorKey] && (
+                <p className="text-sm text-red-500">{errors[errorKey]}</p>
+              )}
+
+              {/* Order subtotal */}
+              <div className="flex justify-between text-xs text-muted-foreground pt-1">
+                <span>Items: {formatSats(order.subtotalSats)}</span>
+                {selection && (
+                  <span>
+                    Shipping: {formatSats(convertToSats(selection.cost, selection.currency))}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Order Total */}
+        <div className="bg-gini-50 rounded-lg p-3 space-y-1">
+          <div className="flex justify-between text-sm">
+            <span>Subtotal</span>
+            <span>{formatSats(totals.subtotalSats)}</span>
+          </div>
+          <div className="flex justify-between text-sm">
+            <span>Shipping</span>
+            <span>{formatSats(totals.shippingSats)}</span>
+          </div>
+          <div className="flex justify-between font-medium pt-1 border-t border-gini-200">
+            <span className="font-fun">Total</span>
+            <div className="flex items-center gap-1 text-gini-600">
+              <Zap className="h-4 w-4 text-yellow-500" />
+              <span className="font-fun">{formatSats(totals.totalSats)}</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Shipping Address Section */}
@@ -225,7 +410,7 @@ export function ShippingForm({ onSubmit, isSubmitting }: ShippingFormProps) {
           <Label htmlFor="message">Order Notes (optional)</Label>
           <Textarea
             id="message"
-            placeholder="Any special instructions for your order? 🐹"
+            placeholder="Any special instructions for your order?"
             value={formData.message}
             onChange={(e) => handleChange('message', e.target.value)}
             className="border-gini-200"
