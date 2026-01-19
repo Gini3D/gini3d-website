@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { Check, Copy, ExternalLink, Loader2, Zap } from 'lucide-react';
 
@@ -28,9 +28,10 @@ export function PaymentDisplay({
   const [qrCodeUrl, setQrCodeUrl] = useState<string>('');
 
   // Convert to sats if needed
-  const satsAmount = currency.toLowerCase() === 'sat' || currency.toLowerCase() === 'sats'
-    ? totalSats
-    : convertToSats(totalSats, currency);
+  const satsAmount =
+    currency.toLowerCase() === 'sat' || currency.toLowerCase() === 'sats'
+      ? totalSats
+      : convertToSats(totalSats, currency);
 
   // For demo purposes, generate a mock Lightning invoice
   // In production, this would come from the merchant via Kind 16 subscription
@@ -124,11 +125,7 @@ export function PaymentDisplay({
             onClick={handleCopy}
             className="border-gini-200 shrink-0"
           >
-            {copied ? (
-              <Check className="h-4 w-4 text-green-600" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
+            {copied ? <Check className="h-4 w-4 text-green-600" /> : <Copy className="h-4 w-4" />}
           </Button>
         </div>
       </div>

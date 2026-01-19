@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 
-import { CartDrawer } from '@/components/cart/CartDrawer';
 import { Footer } from '@/components/Footer';
 import { Header } from '@/components/Header';
+import { CartDrawer } from '@/components/cart/CartDrawer';
 
 import './globals.css';
 import { Providers } from './providers';

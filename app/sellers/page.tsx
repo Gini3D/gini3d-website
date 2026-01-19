@@ -53,7 +53,7 @@ const FEATURED_SELLER_DATA: FeaturedSeller[] = [
 ];
 
 export default function SellersPage() {
-  const [sellers, setSellers] = useState<FeaturedSeller[]>(FEATURED_SELLER_DATA);
+  const [sellers] = useState<FeaturedSeller[]>(FEATURED_SELLER_DATA);
   const [profiles, setProfiles] = useState<Map<string, SellerProfile>>(new Map());
   const [loading, setLoading] = useState(true);
 
@@ -65,6 +65,7 @@ export default function SellersPage() {
           {
             kinds: [0],
             authors: FEATURED_SELLERS,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
           DEFAULT_RELAYS
         );
@@ -110,8 +111,8 @@ export default function SellersPage() {
           Amazing Sellers!
         </h1>
         <p className="text-muted-foreground mx-auto max-w-2xl text-lg">
-          We feature pre-selected sellers who specialize in 3D printing on Nostr. Each seller
-          brings their own unique style and creativity! 🎨
+          We feature pre-selected sellers who specialize in 3D printing on Nostr. Each seller brings
+          their own unique style and creativity! 🎨
         </p>
       </div>
 

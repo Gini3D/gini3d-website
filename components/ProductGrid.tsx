@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart, Loader2 } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 
 import type { Product } from '@/lib/types';
 
@@ -45,7 +45,7 @@ export function ProductGrid({ products, loading, error }: ProductGridProps) {
         <div className="mb-4 text-5xl">🐹</div>
         <h3 className="font-elegance text-foreground mb-2 text-xl">No products found</h3>
         <p className="font-elegance text-foreground/60 max-w-md text-center">
-          We're working on adding more cute 3D printed goodies!
+          We&apos;re working on adding more cute 3D printed goodies!
           <br />
           Check back soon!
         </p>

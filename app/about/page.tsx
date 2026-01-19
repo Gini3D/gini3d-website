@@ -1,9 +1,8 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 
-import { Heart, ShoppingCart, Sparkles, Zap } from 'lucide-react';
+import { ShoppingCart, Sparkles } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -46,10 +45,11 @@ export default function AboutPage() {
               <span className="heart-decoration">How It Started</span>
             </h2>
             <p className="font-elegance text-foreground/70 text-lg">
-              Hi! We're Nini and Gabby, and we're both 10 years old. We've been best friends since
-              kindergarten and we LOVE guinea pigs! The name <strong className="text-gini-heart">Gini3D</strong> comes
-              from our names: <strong>G</strong>abby + N<strong>ini</strong> = <strong>Gini</strong>!
-              Plus we love guinea pigs, so it works perfectly! 🐹
+              Hi! We&apos;re Nini and Gabby, and we&apos;re both 10 years old. We&apos;ve been best
+              friends since kindergarten and we LOVE guinea pigs! The name{' '}
+              <strong className="text-gini-heart">Gini3D</strong> comes from our names:{' '}
+              <strong>G</strong>abby + N<strong>ini</strong> = <strong>Gini</strong>! Plus we love
+              guinea pigs, so it works perfectly! 🐹
             </p>
             <p className="font-elegance text-foreground/70 text-lg">
               We started making 3D printed keychains and figurines for our friends, and everyone
@@ -58,7 +58,7 @@ export default function AboutPage() {
             </p>
             <p className="font-elegance text-foreground/70 text-lg">
               We also feature products from pre-selected sellers who specialize in 3D printing on
-              Nostr, like Robotechy (run by Isaac, who's 15!).
+              Nostr, like Robotechy (run by Isaac, who&apos;s 15!).
             </p>
           </div>
         </div>
@@ -87,7 +87,7 @@ export default function AboutPage() {
               </h3>
               <p className="font-elegance text-foreground/60">
                 Pay instantly with super low fees! Our dads taught us about Bitcoin and we think
-                it's really cool.
+                it&apos;s really cool.
               </p>
             </div>
 

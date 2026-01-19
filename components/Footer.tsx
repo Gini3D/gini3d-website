@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import { Github, Heart, Zap } from 'lucide-react';
+import { Heart, Zap } from 'lucide-react';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();

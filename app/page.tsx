@@ -119,8 +119,8 @@ export default function Home() {
               Meet Nini & Gabby
             </h2>
             <p className="font-elegance text-foreground/70 mb-6">
-              We're two 10-year-old best friends who love guinea pigs and creating cute things! We
-              started Gini3D to share our 3D printed creations with the world.
+              We&apos;re two 10-year-old best friends who love guinea pigs and creating cute things!
+              We started Gini3D to share our 3D printed creations with the world.
             </p>
             <Button
               variant="outline"

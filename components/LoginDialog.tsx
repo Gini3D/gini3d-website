@@ -2,8 +2,6 @@
 
 import { useState } from 'react';
 
-import Image from 'next/image';
-
 import { Eye, EyeOff, Key, Loader2, LogIn, Puzzle, Shield, Sparkles } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';

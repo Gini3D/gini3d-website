@@ -1,5 +1,6 @@
-import type { CartItem, ShippingInfo } from '@/lib/cartTypes';
 import type { NostrEvent } from 'nostr-tools';
+
+import type { CartItem, ShippingInfo } from '@/lib/cartTypes';
 
 // Gamma Markets event kinds
 export const ORDER_GENERAL_KIND = 14; // General communication

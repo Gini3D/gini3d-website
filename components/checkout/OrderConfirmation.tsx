@@ -1,6 +1,6 @@
 'use client';
 
-import { CheckCircle, PartyPopper, ShoppingBag } from 'lucide-react';
+import { CheckCircle, ShoppingBag } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 
@@ -23,9 +23,7 @@ export function OrderConfirmation({ orderId, onClose }: OrderConfirmationProps) 
 
       {/* Success Message */}
       <div>
-        <h3 className="font-fun mb-2 text-2xl font-bold text-green-600">
-          Payment Successful!
-        </h3>
+        <h3 className="font-fun mb-2 text-2xl font-bold text-green-600">Payment Successful!</h3>
         <p className="text-muted-foreground">
           Thank you for your order! We&apos;re so excited to send you your adorable 3D prints! 🐹
         </p>
@@ -42,11 +40,21 @@ export function OrderConfirmation({ orderId, onClose }: OrderConfirmationProps) 
       {/* Fun Message */}
       <div className="space-y-2">
         <div className="flex justify-center gap-2 text-2xl">
-          <span className="animate-bounce" style={{ animationDelay: '0ms' }}>💖</span>
-          <span className="animate-bounce" style={{ animationDelay: '100ms' }}>🐹</span>
-          <span className="animate-bounce" style={{ animationDelay: '200ms' }}>✨</span>
-          <span className="animate-bounce" style={{ animationDelay: '300ms' }}>🎀</span>
-          <span className="animate-bounce" style={{ animationDelay: '400ms' }}>💜</span>
+          <span className="animate-bounce" style={{ animationDelay: '0ms' }}>
+            💖
+          </span>
+          <span className="animate-bounce" style={{ animationDelay: '100ms' }}>
+            🐹
+          </span>
+          <span className="animate-bounce" style={{ animationDelay: '200ms' }}>
+            ✨
+          </span>
+          <span className="animate-bounce" style={{ animationDelay: '300ms' }}>
+            🎀
+          </span>
+          <span className="animate-bounce" style={{ animationDelay: '400ms' }}>
+            💜
+          </span>
         </div>
         <p className="text-muted-foreground text-sm">
           We&apos;ll start working on your order right away!
@@ -87,8 +95,7 @@ export function OrderConfirmation({ orderId, onClose }: OrderConfirmationProps) 
       {/* Thank You Note */}
       <p className="text-gini-500 font-fun text-sm">
         Thank you for supporting Gini3D! 💕
-        <br />
-        - Nini & Gabby
+        <br />- Nini & Gabby
       </p>
     </div>
   );

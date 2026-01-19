@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 
-import { AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
+import { LoginDialog } from '@/components/LoginDialog';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Dialog,
@@ -16,12 +17,11 @@ import {
 import { useAuth } from '@/hooks/useAuth';
 import { useCart } from '@/hooks/useCart';
 
-import { LoginDialog } from '@/components/LoginDialog';
-import { ShippingForm } from './ShippingForm';
-import { PaymentDisplay } from './PaymentDisplay';
-import { OrderConfirmation } from './OrderConfirmation';
-
 import type { ShippingInfo } from '@/lib/cartTypes';
+
+import { OrderConfirmation } from './OrderConfirmation';
+import { PaymentDisplay } from './PaymentDisplay';
+import { ShippingForm } from './ShippingForm';
 
 interface CheckoutDialogProps {
   open: boolean;
@@ -39,7 +39,7 @@ export function CheckoutDialog({ open, onOpenChange }: CheckoutDialogProps) {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderId, setOrderId] = useState<string | null>(null);
-  const [shippingInfo, setShippingInfo] = useState<ShippingInfo | null>(null);
+  const [, setShippingInfo] = useState<ShippingInfo | null>(null);
 
   const formatPrice = (amount: number, curr: string) => {
     if (curr.toLowerCase() === 'sats' || curr.toLowerCase() === 'sat') {
@@ -128,7 +128,9 @@ export function CheckoutDialog({ open, onOpenChange }: CheckoutDialogProps) {
                 <p className="text-sm">
                   <span className="font-medium">{totalItems} item(s)</span>
                   <span className="text-muted-foreground"> · </span>
-                  <span className="text-gini-600 font-medium">{formatPrice(totalPrice, currency)}</span>
+                  <span className="text-gini-600 font-medium">
+                    {formatPrice(totalPrice, currency)}
+                  </span>
                 </p>
               </div>
 

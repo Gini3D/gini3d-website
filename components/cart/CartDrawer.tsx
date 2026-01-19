@@ -4,8 +4,9 @@ import { useState } from 'react';
 
 import Image from 'next/image';
 
-import { Minus, Plus, ShoppingBag, Trash2, X } from 'lucide-react';
+import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 
+import { CheckoutDialog } from '@/components/checkout/CheckoutDialog';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
@@ -18,10 +19,18 @@ import {
 
 import { useCart } from '@/hooks/useCart';
 
-import { CheckoutDialog } from '@/components/checkout/CheckoutDialog';
-
 export function CartDrawer() {
-  const { items, isOpen, setIsOpen, totalItems, totalPrice, currency, clearCart, removeItem, updateQuantity } = useCart();
+  const {
+    items,
+    isOpen,
+    setIsOpen,
+    totalItems,
+    totalPrice,
+    currency,
+    clearCart,
+    removeItem,
+    updateQuantity,
+  } = useCart();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   const handleCheckout = () => {
@@ -100,7 +109,7 @@ export function CartDrawer() {
 
                       {/* Product Details */}
                       <div className="flex flex-1 flex-col">
-                        <h4 className="font-fun text-sm font-medium leading-tight">
+                        <h4 className="font-fun text-sm leading-tight font-medium">
                           {item.product.title}
                         </h4>
                         <p className="text-gini-600 mt-1 text-sm font-medium">

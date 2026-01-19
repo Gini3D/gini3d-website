@@ -76,6 +76,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           kinds: [0],
           authors: [pubkey],
           limit: 1,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } as any,
         DEFAULT_RELAYS
       );
@@ -149,6 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           pubkey = getPublicKey(decoded.data);
         } else {
           // Assume hex private key
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           pubkey = getPublicKey(nsec as any);
         }
 

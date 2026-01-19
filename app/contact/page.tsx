@@ -89,8 +89,9 @@ export default function ContactPage() {
               <div className="flex-1 text-center md:text-left">
                 <h2 className="font-fun mb-2 text-2xl font-bold">Want to Sell on Gini3D?</h2>
                 <p className="text-muted-foreground mb-4">
-                  Are you a 3D printing maker on Nostr? We&apos;re always looking for awesome sellers
-                  who specialize in 3D printed products! Contact us to become a featured seller.
+                  Are you a 3D printing maker on Nostr? We&apos;re always looking for awesome
+                  sellers who specialize in 3D printed products! Contact us to become a featured
+                  seller.
                 </p>
                 <div className="flex flex-wrap justify-center gap-2 md:justify-start">
                   <span className="bg-gini-100 text-gini-600 rounded-full px-3 py-1 text-sm">

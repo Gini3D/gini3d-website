@@ -2,7 +2,7 @@
 
 import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import type { CartItem, CartState, Product } from '@/lib/types';
+import type { CartItem, Product } from '@/lib/types';
 
 interface CartContextType {
   items: CartItem[];
@@ -23,33 +23,30 @@ const CartContext = createContext<CartContextType | null>(null);
 
 const CART_STORAGE_KEY = 'gini3d-cart';
 
-export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-
-  // Load cart from localStorage on mount
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const stored = localStorage.getItem(CART_STORAGE_KEY);
-      if (stored) {
-        try {
-          const parsed = JSON.parse(stored);
-          setItems(parsed);
-        } catch (e) {
-          console.error('Failed to parse cart from storage:', e);
-        }
-      }
-      setIsInitialized(true);
+// Load cart from localStorage (lazy initializer)
+function getInitialCart(): CartItem[] {
+  if (typeof window === 'undefined') return [];
+  const stored = localStorage.getItem(CART_STORAGE_KEY);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      console.error('Failed to parse cart from storage:', e);
     }
-  }, []);
+  }
+  return [];
+}
+
+export function CartProvider({ children }: { children: ReactNode }) {
+  const [items, setItems] = useState<CartItem[]>(getInitialCart);
+  const [isOpen, setIsOpen] = useState(false);
 
   // Save cart to localStorage when it changes
   useEffect(() => {
-    if (isInitialized && typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(items));
     }
-  }, [items, isInitialized]);
+  }, [items]);
 
   const addItem = useCallback((product: Product, quantity: number = 1) => {
     setItems((prev) => {

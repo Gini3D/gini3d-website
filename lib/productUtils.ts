@@ -1,7 +1,7 @@
 import type { Event } from 'nostr-tools';
 
-import { encodeNaddr, pubkeyToNpub } from './nostr';
-import type { ClassifiedListingEvent, Product } from './types';
+import { encodeNaddr } from './nostr';
+import type { Product } from './types';
 import { DEFAULT_RELAYS } from './types';
 
 // Parse a NIP-99 kind 30402 event into a Product

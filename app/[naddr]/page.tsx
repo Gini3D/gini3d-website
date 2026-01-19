@@ -8,7 +8,6 @@ import { useParams } from 'next/navigation';
 
 import {
   ChevronLeft,
-  ExternalLink,
   Heart,
   Loader2,
   MessageCircle,
@@ -24,7 +23,7 @@ import { useCart } from '@/hooks/useCart';
 import { useProduct } from '@/hooks/useProducts';
 
 import { shortenPubkey } from '@/lib/nostr';
-import { formatPrice, formatRelativeTime, getProductImage } from '@/lib/productUtils';
+import { formatPrice, formatRelativeTime } from '@/lib/productUtils';
 
 export default function ProductPage() {
   const params = useParams();

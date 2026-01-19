@@ -75,7 +75,7 @@ export function HeroSection() {
                 <div className="p-6 text-center">
                   <div className="mb-4 text-6xl">🐹🐹</div>
                   <p className="font-elegance text-foreground/60 text-sm">
-                    Nini & Gabby's
+                    Nini &amp; Gabby&apos;s
                     <br />
                     3D Print Shop
                   </p>

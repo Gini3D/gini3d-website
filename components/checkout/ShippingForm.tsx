@@ -7,7 +7,6 @@ import { Loader2, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -15,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
 
 import type { ShippingInfo } from '@/lib/cartTypes';
 
@@ -91,8 +91,6 @@ export function ShippingForm({ onSubmit, isSubmitting }: ShippingFormProps) {
     }
   };
 
-  const selectedZone = SHIPPING_ZONES.find((z) => z.id === formData.shippingZone);
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Shipping Zone */}
@@ -115,9 +113,7 @@ export function ShippingForm({ onSubmit, isSubmitting }: ShippingFormProps) {
             ))}
           </SelectContent>
         </Select>
-        {errors.shippingZone && (
-          <p className="text-sm text-red-500">{errors.shippingZone}</p>
-        )}
+        {errors.shippingZone && <p className="text-sm text-red-500">{errors.shippingZone}</p>}
       </div>
 
       {/* Shipping Address Section */}
