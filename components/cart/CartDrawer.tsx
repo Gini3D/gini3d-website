@@ -144,28 +144,21 @@ export function CartDrawer() {
                   </Button>
                 )}
 
-                {/* Breakdown */}
-                <div className="space-y-1 mb-2 text-sm">
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Subtotal ({sellerOrders.length} {sellerOrders.length === 1 ? 'seller' : 'sellers'})</span>
-                    <span>{formatSats(grandTotal.subtotalSats)}</span>
-                  </div>
-                  <div className="flex justify-between text-muted-foreground">
-                    <span>Shipping</span>
-                    <span>{formatSats(grandTotal.shippingSats)}</span>
-                  </div>
-                </div>
-
-                {/* Grand Total */}
-                <div className="mb-2 flex items-center justify-between border-t pt-2">
-                  <span className="font-fun text-lg font-medium">Total:</span>
+                {/* Subtotal */}
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="font-fun text-lg font-medium">Subtotal:</span>
                   <div className="flex items-center gap-2">
                     <Zap className="h-5 w-5 text-yellow-500" />
                     <span className="text-gini-600 font-fun text-xl font-bold">
-                      {formatSats(grandTotal.totalSats)}
+                      {formatSats(grandTotal.subtotalSats)}
                     </span>
                   </div>
                 </div>
+
+                {/* Shipping notice */}
+                <p className="text-muted-foreground text-xs mb-3">
+                  + Shipping calculated at checkout
+                </p>
 
                 {/* Exchange Rate Info */}
                 {rates && (
@@ -312,21 +305,10 @@ function SellerSection({ order, formatPrice, formatSats, updateQuantity, removeI
       </div>
 
       {/* Seller Subtotal */}
-      <div className="bg-gini-50 px-3 py-2 border-t border-gini-200 space-y-1">
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span>Items</span>
-          <span>{formatSats(order.subtotalSats)}</span>
-        </div>
-        <div className="flex justify-between text-xs text-muted-foreground">
-          <span className="flex items-center gap-1">
-            <Package className="h-3 w-3" />
-            Shipping
-          </span>
-          <span>{formatSats(order.shippingSats)}</span>
-        </div>
-        <div className="flex justify-between text-sm font-medium pt-1 border-t border-gini-200">
-          <span>Seller Total</span>
-          <span className="text-gini-600">{formatSats(order.totalSats)}</span>
+      <div className="bg-gini-50 px-3 py-2 border-t border-gini-200">
+        <div className="flex justify-between text-sm font-medium">
+          <span>Subtotal</span>
+          <span className="text-gini-600">{formatSats(order.subtotalSats)}</span>
         </div>
       </div>
     </div>

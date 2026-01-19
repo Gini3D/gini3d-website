@@ -200,13 +200,11 @@ export function groupCartBySeller(
     sellerOrder.subtotalSats += satsAmount * item.quantity;
   }
 
-  // Calculate totals for each seller
+  // Return orders - shipping is calculated at checkout, not in cart
   const orders = Array.from(sellerMap.values());
   for (const order of orders) {
-    // Shipping is calculated per seller - default 5000 sats (~£3.50) per seller
-    // This could be made configurable per seller in the future
-    order.shippingSats = 5000;
-    order.totalSats = order.subtotalSats + order.shippingSats;
+    order.shippingSats = 0; // Calculated at checkout
+    order.totalSats = order.subtotalSats; // Just subtotal until checkout
   }
 
   return orders;
