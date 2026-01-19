@@ -72,7 +72,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="hover:bg-gini-100 relative"
+              className="hover:bg-gini-100 relative cursor-pointer"
               onClick={() => setCartOpen(true)}
             >
               <ShoppingCart className="text-primary h-5 w-5" />
@@ -90,7 +90,7 @@ export function Header() {
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="hover:bg-gini-100 gap-2">
+                    <Button variant="ghost" className="hover:bg-gini-100 gap-2 cursor-pointer">
                       {user.picture ? (
                         <Image
                           src={user.picture}
@@ -126,14 +126,14 @@ export function Header() {
                   <Button
                     variant="ghost"
                     onClick={() => setLoginOpen(true)}
-                    className="hover:bg-gini-100 font-fun gap-2"
+                    className="hover:bg-gini-100 font-fun gap-2 cursor-pointer"
                   >
                     <LogIn className="h-4 w-4" />
                     Log in
                   </Button>
                   <Button
                     onClick={() => setLoginOpen(true)}
-                    className="btn-fun bg-gini-heart hover:bg-gini-500 font-fun gap-2"
+                    className="btn-fun bg-gini-heart hover:bg-gini-500 font-fun gap-2 cursor-pointer"
                   >
                     <UserPlus className="h-4 w-4" />
                     Sign Up
@@ -145,7 +145,7 @@ export function Header() {
             {/* Mobile Menu */}
             <Sheet>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="ghost" size="icon" className="hover:bg-gini-100">
+                <Button variant="ghost" size="icon" className="hover:bg-gini-100 cursor-pointer">
                   <Menu className="text-primary h-5 w-5" />
                 </Button>
               </SheetTrigger>
@@ -206,7 +206,7 @@ export function Header() {
                         <Button
                           variant="outline"
                           onClick={logout}
-                          className="w-full justify-start gap-2 text-red-600"
+                          className="w-full justify-start gap-2 text-red-600 cursor-pointer"
                         >
                           <LogOut className="h-4 w-4" />
                           Log out
@@ -217,14 +217,14 @@ export function Header() {
                         <Button
                           variant="outline"
                           onClick={() => setLoginOpen(true)}
-                          className="w-full justify-start gap-2"
+                          className="w-full justify-start gap-2 cursor-pointer"
                         >
                           <LogIn className="h-4 w-4" />
                           Log in
                         </Button>
                         <Button
                           onClick={() => setLoginOpen(true)}
-                          className="bg-gini-heart hover:bg-gini-500 w-full justify-start gap-2"
+                          className="bg-gini-heart hover:bg-gini-500 w-full justify-start gap-2 cursor-pointer"
                         >
                           <UserPlus className="h-4 w-4" />
                           Sign Up
