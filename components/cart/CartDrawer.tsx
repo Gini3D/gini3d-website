@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 
 import Image from 'next/image';
 
-import { Minus, Plus, RefreshCw, ShoppingBag, Trash2, Zap } from 'lucide-react';
+import { Minus, Package, Plus, RefreshCw, ShoppingBag, Store, Trash2, Zap } from 'lucide-react';
 
 import { CheckoutDialog } from '@/components/checkout/CheckoutDialog';
 import { Button } from '@/components/ui/button';
@@ -20,6 +20,9 @@ import {
 import { useCart } from '@/hooks/useCart';
 import { useExchangeRates } from '@/hooks/useExchangeRates';
 
+import { calculateGrandTotal, groupCartBySeller, type SellerOrder } from '@/lib/productUtils';
+import { SELLER_METADATA } from '@/lib/types';
+
 export function CartDrawer() {
   const {
     items,
@@ -33,20 +36,11 @@ export function CartDrawer() {
   const { rates, loading: ratesLoading, convertToSats, refresh: refreshRates } = useExchangeRates();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
-  // Calculate total in sats using exchange rates
-  const { totalSats, itemSats } = useMemo(() => {
-    const itemSatsMap = new Map<string, number>();
-    let total = 0;
-
-    for (const item of items) {
-      const amount = parseFloat(item.product.price.amount) || 0;
-      const currency = item.product.price.currency;
-      const sats = convertToSats(amount, currency) * item.quantity;
-      itemSatsMap.set(item.product.id, sats / item.quantity); // Store per-item sats
-      total += sats;
-    }
-
-    return { totalSats: total, itemSats: itemSatsMap };
+  // Group cart items by seller and calculate totals
+  const { sellerOrders, grandTotal } = useMemo(() => {
+    const orders = groupCartBySeller(items, convertToSats, SELLER_METADATA);
+    const total = calculateGrandTotal(orders);
+    return { sellerOrders: orders, grandTotal: total };
   }, [items, convertToSats]);
 
   const handleCheckout = () => {
@@ -111,79 +105,28 @@ export function CartDrawer() {
           ) : (
             <>
               <ScrollArea className="flex-1">
-                <div className="space-y-4 p-4">
-                  {items.map((item) => (
-                    <div
-                      key={item.product.id}
-                      className="border-gini-200 flex gap-4 rounded-lg border bg-white p-3"
-                    >
-                      {/* Product Image */}
-                      <div className="bg-gini-100 relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-md">
-                        {item.product.images[0] ? (
-                          <Image
-                            src={item.product.images[0]}
-                            alt={item.product.title}
-                            fill
-                            className="object-cover"
-                            unoptimized
-                          />
-                        ) : (
-                          <div className="flex h-full w-full items-center justify-center text-2xl">
-                            🎁
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Product Details */}
-                      <div className="flex flex-1 flex-col">
-                        <h4 className="font-fun text-sm leading-tight font-medium">
-                          {item.product.title}
-                        </h4>
-                        <div className="mt-1 flex items-center gap-2">
-                          <span className="text-gini-600 text-sm font-medium">
-                            {formatPrice(item.product.price.amount, item.product.price.currency)}
-                          </span>
-                          {item.product.price.currency.toLowerCase() !== 'sats' &&
-                            item.product.price.currency.toLowerCase() !== 'sat' && (
-                              <span className="text-muted-foreground text-xs">
-                                ≈ {formatSats(itemSats.get(item.product.id) || 0)}
-                              </span>
-                            )}
-                        </div>
-
-                        {/* Quantity Controls */}
-                        <div className="mt-2 flex items-center gap-2">
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-7 w-7"
-                            onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                          >
-                            <Minus className="h-3 w-3" />
-                          </Button>
-                          <span className="w-8 text-center text-sm font-medium">
-                            {item.quantity}
-                          </span>
-                          <Button
-                            variant="outline"
-                            size="icon"
-                            className="h-7 w-7"
-                            onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                          >
-                            <Plus className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="ml-auto h-7 w-7 text-red-500 hover:bg-red-50 hover:text-red-600"
-                            onClick={() => removeItem(item.product.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
+                <div className="space-y-6 p-4">
+                  {/* Items grouped by seller */}
+                  {sellerOrders.map((order) => (
+                    <SellerSection
+                      key={order.sellerPubkey}
+                      order={order}
+                      formatPrice={formatPrice}
+                      formatSats={formatSats}
+                      updateQuantity={updateQuantity}
+                      removeItem={removeItem}
+                    />
                   ))}
+
+                  {/* Multi-seller notice */}
+                  {sellerOrders.length > 1 && (
+                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
+                      <p className="text-amber-800">
+                        <strong>Note:</strong> Your order contains items from {sellerOrders.length} different sellers.
+                        Each seller will ship separately and you&apos;ll pay each seller individually.
+                      </p>
+                    </div>
+                  )}
                 </div>
               </ScrollArea>
 
@@ -201,13 +144,25 @@ export function CartDrawer() {
                   </Button>
                 )}
 
-                {/* Total in Sats */}
-                <div className="mb-2 flex items-center justify-between">
+                {/* Breakdown */}
+                <div className="space-y-1 mb-2 text-sm">
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Subtotal ({sellerOrders.length} {sellerOrders.length === 1 ? 'seller' : 'sellers'})</span>
+                    <span>{formatSats(grandTotal.subtotalSats)}</span>
+                  </div>
+                  <div className="flex justify-between text-muted-foreground">
+                    <span>Shipping</span>
+                    <span>{formatSats(grandTotal.shippingSats)}</span>
+                  </div>
+                </div>
+
+                {/* Grand Total */}
+                <div className="mb-2 flex items-center justify-between border-t pt-2">
                   <span className="font-fun text-lg font-medium">Total:</span>
                   <div className="flex items-center gap-2">
                     <Zap className="h-5 w-5 text-yellow-500" />
                     <span className="text-gini-600 font-fun text-xl font-bold">
-                      {formatSats(totalSats)}
+                      {formatSats(grandTotal.totalSats)}
                     </span>
                   </div>
                 </div>
@@ -237,11 +192,11 @@ export function CartDrawer() {
                   size="lg"
                 >
                   <Zap className="mr-2 h-5 w-5" />
-                  Pay {formatSats(totalSats)}
+                  Checkout ({sellerOrders.length} {sellerOrders.length === 1 ? 'order' : 'orders'})
                 </Button>
 
                 <p className="text-muted-foreground mt-3 text-center text-xs">
-                  Pay with Bitcoin Lightning ⚡
+                  Pay each seller with Bitcoin Lightning ⚡
                 </p>
               </div>
             </>
@@ -251,5 +206,129 @@ export function CartDrawer() {
 
       <CheckoutDialog open={checkoutOpen} onOpenChange={setCheckoutOpen} />
     </>
+  );
+}
+
+// Seller section component
+interface SellerSectionProps {
+  order: SellerOrder;
+  formatPrice: (amount: string | number, currency: string) => string;
+  formatSats: (sats: number) => string;
+  updateQuantity: (productId: string, quantity: number) => void;
+  removeItem: (productId: string) => void;
+}
+
+function SellerSection({ order, formatPrice, formatSats, updateQuantity, removeItem }: SellerSectionProps) {
+  return (
+    <div className="border-gini-200 rounded-lg border overflow-hidden">
+      {/* Seller Header */}
+      <div className="bg-gini-50 px-3 py-2 flex items-center gap-2 border-b border-gini-200">
+        {order.sellerPicture ? (
+          <Image
+            src={order.sellerPicture}
+            alt={order.sellerName}
+            width={24}
+            height={24}
+            className="rounded-full"
+            unoptimized
+          />
+        ) : (
+          <Store className="h-5 w-5 text-gini-500" />
+        )}
+        <span className="font-fun text-sm font-medium">{order.sellerName}</span>
+      </div>
+
+      {/* Items */}
+      <div className="divide-y divide-gini-100">
+        {order.items.map((item) => (
+          <div key={item.product.id} className="flex gap-3 p-3 bg-white">
+            {/* Product Image */}
+            <div className="bg-gini-100 relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
+              {item.product.images[0] ? (
+                <Image
+                  src={item.product.images[0]}
+                  alt={item.product.title}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center text-xl">
+                  🎁
+                </div>
+              )}
+            </div>
+
+            {/* Product Details */}
+            <div className="flex flex-1 flex-col min-w-0">
+              <h4 className="font-fun text-sm leading-tight font-medium truncate">
+                {item.product.title}
+              </h4>
+              <div className="mt-1 flex items-center gap-2 flex-wrap">
+                <span className="text-gini-600 text-sm font-medium">
+                  {formatPrice(item.product.price.amount, item.product.price.currency)}
+                </span>
+                {item.product.price.currency.toLowerCase() !== 'sats' &&
+                  item.product.price.currency.toLowerCase() !== 'sat' && (
+                    <span className="text-muted-foreground text-xs">
+                      ≈ {formatSats(item.satsAmount)}
+                    </span>
+                  )}
+              </div>
+
+              {/* Quantity Controls */}
+              <div className="mt-2 flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
+                >
+                  <Minus className="h-3 w-3" />
+                </Button>
+                <span className="w-6 text-center text-sm font-medium">
+                  {item.quantity}
+                </span>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-6 w-6"
+                  onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                >
+                  <Plus className="h-3 w-3" />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="ml-auto h-6 w-6 text-red-500 hover:bg-red-50 hover:text-red-600"
+                  onClick={() => removeItem(item.product.id)}
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Seller Subtotal */}
+      <div className="bg-gini-50 px-3 py-2 border-t border-gini-200 space-y-1">
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span>Items</span>
+          <span>{formatSats(order.subtotalSats)}</span>
+        </div>
+        <div className="flex justify-between text-xs text-muted-foreground">
+          <span className="flex items-center gap-1">
+            <Package className="h-3 w-3" />
+            Shipping
+          </span>
+          <span>{formatSats(order.shippingSats)}</span>
+        </div>
+        <div className="flex justify-between text-sm font-medium pt-1 border-t border-gini-200">
+          <span>Seller Total</span>
+          <span className="text-gini-600">{formatSats(order.totalSats)}</span>
+        </div>
+      </div>
+    </div>
   );
 }

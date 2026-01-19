@@ -141,3 +141,89 @@ export function filterProductsBySearch(products: Product[], search: string): Pro
       p.tags.some((t) => t.toLowerCase().includes(term))
   );
 }
+
+// Group cart items by seller pubkey
+export interface SellerOrder {
+  sellerPubkey: string;
+  sellerName: string;
+  sellerPicture?: string;
+  items: Array<{
+    product: Product;
+    quantity: number;
+    satsAmount: number;
+  }>;
+  subtotalSats: number;
+  shippingSats: number;
+  totalSats: number;
+}
+
+export function groupCartBySeller(
+  items: Array<{ product: Product; quantity: number }>,
+  convertToSats: (amount: number, currency: string) => number,
+  sellerMetadata?: Record<string, { name: string; specialty?: string }>
+): SellerOrder[] {
+  const sellerMap = new Map<string, SellerOrder>();
+
+  for (const item of items) {
+    const sellerPubkey = item.product.pubkey;
+
+    if (!sellerMap.has(sellerPubkey)) {
+      // Get seller name from product, metadata, or default
+      const sellerName =
+        item.product.seller?.displayName ||
+        item.product.seller?.name ||
+        sellerMetadata?.[sellerPubkey]?.name ||
+        `Seller ${sellerPubkey.slice(0, 8)}...`;
+
+      sellerMap.set(sellerPubkey, {
+        sellerPubkey,
+        sellerName,
+        sellerPicture: item.product.seller?.picture,
+        items: [],
+        subtotalSats: 0,
+        shippingSats: 0,
+        totalSats: 0,
+      });
+    }
+
+    const sellerOrder = sellerMap.get(sellerPubkey)!;
+    const amount = parseFloat(item.product.price.amount) || 0;
+    const currency = item.product.price.currency;
+    const satsAmount = convertToSats(amount, currency);
+
+    sellerOrder.items.push({
+      product: item.product,
+      quantity: item.quantity,
+      satsAmount,
+    });
+
+    sellerOrder.subtotalSats += satsAmount * item.quantity;
+  }
+
+  // Calculate totals for each seller
+  const orders = Array.from(sellerMap.values());
+  for (const order of orders) {
+    // Shipping is calculated per seller - default 5000 sats (~£3.50) per seller
+    // This could be made configurable per seller in the future
+    order.shippingSats = 5000;
+    order.totalSats = order.subtotalSats + order.shippingSats;
+  }
+
+  return orders;
+}
+
+// Calculate grand total from all seller orders
+export function calculateGrandTotal(orders: SellerOrder[]): {
+  subtotalSats: number;
+  shippingSats: number;
+  totalSats: number;
+} {
+  return orders.reduce(
+    (acc, order) => ({
+      subtotalSats: acc.subtotalSats + order.subtotalSats,
+      shippingSats: acc.shippingSats + order.shippingSats,
+      totalSats: acc.totalSats + order.totalSats,
+    }),
+    { subtotalSats: 0, shippingSats: 0, totalSats: 0 }
+  );
+}
