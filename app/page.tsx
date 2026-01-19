@@ -100,7 +100,7 @@ export default function Home() {
             ].map((category) => (
               <button
                 key={category.name}
-                className={`${category.color} hover-lift rounded-xl border border-white/50 p-6 text-center cursor-pointer`}
+                className={`${category.color} hover-lift cursor-pointer rounded-xl border border-white/50 p-6 text-center`}
               >
                 <div className="mb-2 text-3xl">{category.emoji}</div>
                 <span className="font-elegance text-foreground/80">{category.name}</span>

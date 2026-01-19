@@ -1,8 +1,8 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useEffect, useState } from 'react';
+import { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 
-import { fetchExchangeRates, convertToSats as convertToSatsUtil } from '@/lib/exchangeRates';
+import { convertToSats as convertToSatsUtil, fetchExchangeRates } from '@/lib/exchangeRates';
 
 interface ExchangeRates {
   BTCGBP: number;

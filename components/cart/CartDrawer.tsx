@@ -20,19 +20,11 @@ import {
 import { useCart } from '@/hooks/useCart';
 import { useExchangeRates } from '@/hooks/useExchangeRates';
 
-import { calculateGrandTotal, groupCartBySeller, type SellerOrder } from '@/lib/productUtils';
+import { type SellerOrder, calculateGrandTotal, groupCartBySeller } from '@/lib/productUtils';
 import { SELLER_METADATA } from '@/lib/types';
 
 export function CartDrawer() {
-  const {
-    items,
-    isOpen,
-    setIsOpen,
-    totalItems,
-    clearCart,
-    removeItem,
-    updateQuantity,
-  } = useCart();
+  const { items, isOpen, setIsOpen, totalItems, clearCart, removeItem, updateQuantity } = useCart();
   const { rates, loading: ratesLoading, convertToSats, refresh: refreshRates } = useExchangeRates();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
 
@@ -120,10 +112,11 @@ export function CartDrawer() {
 
                   {/* Multi-seller notice */}
                   {sellerOrders.length > 1 && (
-                    <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-sm">
+                    <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 text-sm">
                       <p className="text-amber-800">
-                        <strong>Note:</strong> Your order contains items from {sellerOrders.length} different sellers.
-                        Each seller will ship separately and you&apos;ll pay each seller individually.
+                        <strong>Note:</strong> Your order contains items from {sellerOrders.length}{' '}
+                        different sellers. Each seller will ship separately and you&apos;ll pay each
+                        seller individually.
                       </p>
                     </div>
                   )}
@@ -156,7 +149,7 @@ export function CartDrawer() {
                 </div>
 
                 {/* Shipping notice */}
-                <p className="text-muted-foreground text-xs mb-3">
+                <p className="text-muted-foreground mb-3 text-xs">
                   + Shipping calculated at checkout
                 </p>
 
@@ -211,11 +204,17 @@ interface SellerSectionProps {
   removeItem: (productId: string) => void;
 }
 
-function SellerSection({ order, formatPrice, formatSats, updateQuantity, removeItem }: SellerSectionProps) {
+function SellerSection({
+  order,
+  formatPrice,
+  formatSats,
+  updateQuantity,
+  removeItem,
+}: SellerSectionProps) {
   return (
-    <div className="border-gini-200 rounded-lg border overflow-hidden">
+    <div className="border-gini-200 overflow-hidden rounded-lg border">
       {/* Seller Header */}
-      <div className="bg-gini-50 px-3 py-2 flex items-center gap-2 border-b border-gini-200">
+      <div className="bg-gini-50 border-gini-200 flex items-center gap-2 border-b px-3 py-2">
         {order.sellerPicture ? (
           <Image
             src={order.sellerPicture}
@@ -226,15 +225,15 @@ function SellerSection({ order, formatPrice, formatSats, updateQuantity, removeI
             unoptimized
           />
         ) : (
-          <Store className="h-5 w-5 text-gini-500" />
+          <Store className="text-gini-500 h-5 w-5" />
         )}
         <span className="font-fun text-sm font-medium">{order.sellerName}</span>
       </div>
 
       {/* Items */}
-      <div className="divide-y divide-gini-100">
+      <div className="divide-gini-100 divide-y">
         {order.items.map((item) => (
-          <div key={item.product.id} className="flex gap-3 p-3 bg-white">
+          <div key={item.product.id} className="flex gap-3 bg-white p-3">
             {/* Product Image */}
             <div className="bg-gini-100 relative h-16 w-16 flex-shrink-0 overflow-hidden rounded-md">
               {item.product.images[0] ? (
@@ -246,18 +245,16 @@ function SellerSection({ order, formatPrice, formatSats, updateQuantity, removeI
                   unoptimized
                 />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-xl">
-                  🎁
-                </div>
+                <div className="flex h-full w-full items-center justify-center text-xl">🎁</div>
               )}
             </div>
 
             {/* Product Details */}
-            <div className="flex flex-1 flex-col min-w-0">
-              <h4 className="font-fun text-sm leading-tight font-medium truncate">
+            <div className="flex min-w-0 flex-1 flex-col">
+              <h4 className="font-fun truncate text-sm leading-tight font-medium">
                 {item.product.title}
               </h4>
-              <div className="mt-1 flex items-center gap-2 flex-wrap">
+              <div className="mt-1 flex flex-wrap items-center gap-2">
                 <span className="text-gini-600 text-sm font-medium">
                   {formatPrice(item.product.price.amount, item.product.price.currency)}
                 </span>
@@ -279,9 +276,7 @@ function SellerSection({ order, formatPrice, formatSats, updateQuantity, removeI
                 >
                   <Minus className="h-3 w-3" />
                 </Button>
-                <span className="w-6 text-center text-sm font-medium">
-                  {item.quantity}
-                </span>
+                <span className="w-6 text-center text-sm font-medium">{item.quantity}</span>
                 <Button
                   variant="outline"
                   size="icon"
@@ -305,7 +300,7 @@ function SellerSection({ order, formatPrice, formatSats, updateQuantity, removeI
       </div>
 
       {/* Seller Subtotal */}
-      <div className="bg-gini-50 px-3 py-2 border-t border-gini-200">
+      <div className="bg-gini-50 border-gini-200 border-t px-3 py-2">
         <div className="flex justify-between text-sm font-medium">
           <span>Subtotal</span>
           <span className="text-gini-600">{formatSats(order.subtotalSats)}</span>

@@ -190,7 +190,9 @@ export default function ProductPage() {
               <div className="flex-1">
                 <p className="font-elegance text-foreground/60 text-sm">Seller</p>
                 <p className="font-elegance text-foreground font-medium">
-                  {product.seller?.displayName || product.seller?.name || shortenPubkey(product.pubkey)}
+                  {product.seller?.displayName ||
+                    product.seller?.name ||
+                    shortenPubkey(product.pubkey)}
                 </p>
                 {product.seller?.nip05 && (
                   <p className="font-elegance text-foreground/50 text-xs">{product.seller.nip05}</p>

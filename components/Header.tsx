@@ -90,7 +90,7 @@ export function Header() {
               ) : user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="hover:bg-gini-100 gap-2 cursor-pointer">
+                    <Button variant="ghost" className="hover:bg-gini-100 cursor-pointer gap-2">
                       {user.picture ? (
                         <Image
                           src={user.picture}
@@ -126,14 +126,14 @@ export function Header() {
                   <Button
                     variant="ghost"
                     onClick={() => setLoginOpen(true)}
-                    className="hover:bg-gini-100 font-fun gap-2 cursor-pointer"
+                    className="hover:bg-gini-100 font-fun cursor-pointer gap-2"
                   >
                     <LogIn className="h-4 w-4" />
                     Log in
                   </Button>
                   <Button
                     onClick={() => setLoginOpen(true)}
-                    className="btn-fun bg-gini-heart hover:bg-gini-500 font-fun gap-2 cursor-pointer"
+                    className="btn-fun bg-gini-heart hover:bg-gini-500 font-fun cursor-pointer gap-2"
                   >
                     <UserPlus className="h-4 w-4" />
                     Sign Up
@@ -206,7 +206,7 @@ export function Header() {
                         <Button
                           variant="outline"
                           onClick={logout}
-                          className="w-full justify-start gap-2 text-red-600 cursor-pointer"
+                          className="w-full cursor-pointer justify-start gap-2 text-red-600"
                         >
                           <LogOut className="h-4 w-4" />
                           Log out
@@ -217,14 +217,14 @@ export function Header() {
                         <Button
                           variant="outline"
                           onClick={() => setLoginOpen(true)}
-                          className="w-full justify-start gap-2 cursor-pointer"
+                          className="w-full cursor-pointer justify-start gap-2"
                         >
                           <LogIn className="h-4 w-4" />
                           Log in
                         </Button>
                         <Button
                           onClick={() => setLoginOpen(true)}
-                          className="bg-gini-heart hover:bg-gini-500 w-full justify-start gap-2 cursor-pointer"
+                          className="bg-gini-heart hover:bg-gini-500 w-full cursor-pointer justify-start gap-2"
                         >
                           <UserPlus className="h-4 w-4" />
                           Sign Up

@@ -33,9 +33,9 @@ interface ShippingFormProps {
 
 // Default shipping zones when seller has no stall defined
 const DEFAULT_SHIPPING_ZONES: StallShippingZone[] = [
-  { id: 'uk', name: 'United Kingdom', cost: 3.50, regions: ['UK', 'GB'] },
-  { id: 'eu', name: 'Europe', cost: 8.00, regions: ['EU'] },
-  { id: 'worldwide', name: 'Worldwide', cost: 15.00, regions: ['*'] },
+  { id: 'uk', name: 'United Kingdom', cost: 3.5, regions: ['UK', 'GB'] },
+  { id: 'eu', name: 'Europe', cost: 8.0, regions: ['EU'] },
+  { id: 'worldwide', name: 'Worldwide', cost: 15.0, regions: ['*'] },
 ];
 
 export function ShippingForm({
@@ -226,10 +226,10 @@ export function ShippingForm({
           return (
             <div
               key={order.sellerPubkey}
-              className="border border-gini-200 rounded-lg p-3 space-y-2"
+              className="border-gini-200 space-y-2 rounded-lg border p-3"
             >
               {/* Seller header */}
-              <div className="flex items-center gap-2 mb-2">
+              <div className="mb-2 flex items-center gap-2">
                 {order.sellerPicture ? (
                   <Image
                     src={order.sellerPicture}
@@ -240,10 +240,10 @@ export function ShippingForm({
                     unoptimized
                   />
                 ) : (
-                  <Store className="h-4 w-4 text-gini-500" />
+                  <Store className="text-gini-500 h-4 w-4" />
                 )}
                 <span className="font-fun text-sm font-medium">{order.sellerName}</span>
-                <span className="text-muted-foreground text-xs ml-auto">
+                <span className="text-muted-foreground ml-auto text-xs">
                   {order.items.length} {order.items.length === 1 ? 'item' : 'items'}
                 </span>
               </div>
@@ -259,17 +259,16 @@ export function ShippingForm({
                 <SelectContent>
                   {shippingOptions.map((zone) => (
                     <SelectItem key={zone.id} value={zone.id}>
-                      {zone.name || zone.id} - {zone.cost === 0 ? 'Free' : formatPrice(zone.cost, currency)}
+                      {zone.name || zone.id} -{' '}
+                      {zone.cost === 0 ? 'Free' : formatPrice(zone.cost, currency)}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {errors[errorKey] && (
-                <p className="text-sm text-red-500">{errors[errorKey]}</p>
-              )}
+              {errors[errorKey] && <p className="text-sm text-red-500">{errors[errorKey]}</p>}
 
               {/* Order subtotal */}
-              <div className="flex justify-between text-xs text-muted-foreground pt-1">
+              <div className="text-muted-foreground flex justify-between pt-1 text-xs">
                 <span>Items: {formatSats(order.subtotalSats)}</span>
                 {selection && (
                   <span>
@@ -282,7 +281,7 @@ export function ShippingForm({
         })}
 
         {/* Order Total */}
-        <div className="bg-gini-50 rounded-lg p-3 space-y-1">
+        <div className="bg-gini-50 space-y-1 rounded-lg p-3">
           <div className="flex justify-between text-sm">
             <span>Subtotal</span>
             <span>{formatSats(totals.subtotalSats)}</span>
@@ -291,9 +290,9 @@ export function ShippingForm({
             <span>Shipping</span>
             <span>{formatSats(totals.shippingSats)}</span>
           </div>
-          <div className="flex justify-between font-medium pt-1 border-t border-gini-200">
+          <div className="border-gini-200 flex justify-between border-t pt-1 font-medium">
             <span className="font-fun">Total</span>
-            <div className="flex items-center gap-1 text-gini-600">
+            <div className="text-gini-600 flex items-center gap-1">
               <Zap className="h-4 w-4 text-yellow-500" />
               <span className="font-fun">{formatSats(totals.totalSats)}</span>
             </div>

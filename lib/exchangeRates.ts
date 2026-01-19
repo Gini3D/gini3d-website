@@ -117,11 +117,7 @@ export async function fetchExchangeRates(): Promise<ExchangeRates> {
  * @param currency - The currency code (GBP, USD, EUR, SATS, BTC)
  * @param rates - Current exchange rates
  */
-export function convertToSats(
-  amount: number,
-  currency: string,
-  rates: ExchangeRates
-): number {
+export function convertToSats(amount: number, currency: string, rates: ExchangeRates): number {
   const currencyUpper = currency.toUpperCase();
 
   // Already in sats
@@ -168,10 +164,7 @@ export function formatSats(sats: number): string {
 /**
  * Get a human-readable exchange rate string
  */
-export function getExchangeRateDisplay(
-  currency: string,
-  rates: ExchangeRates
-): string {
+export function getExchangeRateDisplay(currency: string, rates: ExchangeRates): string {
   const currencyUpper = currency.toUpperCase();
   switch (currencyUpper) {
     case 'GBP':

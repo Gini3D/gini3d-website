@@ -20,7 +20,7 @@ import { useExchangeRates } from '@/hooks/useExchangeRates';
 import { useStalls } from '@/hooks/useStalls';
 
 import type { ShippingInfo } from '@/lib/cartTypes';
-import { groupCartBySeller, type SellerOrder } from '@/lib/productUtils';
+import { type SellerOrder, groupCartBySeller } from '@/lib/productUtils';
 import { SELLER_METADATA } from '@/lib/types';
 
 import { OrderConfirmation } from './OrderConfirmation';
@@ -50,7 +50,12 @@ export function CheckoutDialog({ open, onOpenChange }: CheckoutDialogProps) {
   }, [sellerOrders]);
 
   // Fetch stall data for all sellers
-  const { stalls, loading: stallsLoading, getSellerShipping, getSellerCurrency } = useStalls(sellerPubkeys);
+  const {
+    stalls,
+    loading: stallsLoading,
+    getSellerShipping,
+    getSellerCurrency,
+  } = useStalls(sellerPubkeys);
 
   const [step, setStep] = useState<CheckoutStep>('shipping');
   const [loginOpen, setLoginOpen] = useState(false);
