@@ -173,14 +173,28 @@ export default function ProductPage() {
 
             {/* Seller Info */}
             <div className="border-gini-200 flex items-center gap-3 rounded-xl border bg-white p-4">
-              <div className="bg-gini-gradient flex h-12 w-12 items-center justify-center rounded-full">
-                <span className="text-2xl">🐹</span>
-              </div>
+              {product.seller?.picture ? (
+                <Image
+                  src={product.seller.picture}
+                  alt={product.seller.displayName || product.seller.name || 'Seller'}
+                  width={48}
+                  height={48}
+                  className="rounded-full"
+                  unoptimized
+                />
+              ) : (
+                <div className="bg-gini-gradient flex h-12 w-12 items-center justify-center rounded-full">
+                  <span className="text-2xl">🐹</span>
+                </div>
+              )}
               <div className="flex-1">
                 <p className="font-elegance text-foreground/60 text-sm">Seller</p>
                 <p className="font-elegance text-foreground font-medium">
-                  {shortenPubkey(product.pubkey)}
+                  {product.seller?.displayName || product.seller?.name || shortenPubkey(product.pubkey)}
                 </p>
+                {product.seller?.nip05 && (
+                  <p className="font-elegance text-foreground/50 text-xs">{product.seller.nip05}</p>
+                )}
               </div>
               <Button variant="outline" size="sm" className="border-gini-200 text-foreground/70">
                 <MessageCircle className="mr-1 h-4 w-4" />

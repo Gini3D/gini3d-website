@@ -24,7 +24,7 @@ interface FeaturedSeller {
   productCount?: number;
 }
 
-// Hardcoded featured sellers for display
+// Hardcoded featured sellers for display (3D printing sellers only)
 const FEATURED_SELLER_DATA: FeaturedSeller[] = [
   {
     pubkey: 'd887f1a249412f06d7c043d70aca17d326ba0d26ddfa1793d7bab5a141737412',
@@ -41,14 +41,6 @@ const FEATURED_SELLER_DATA: FeaturedSeller[] = [
       'Isaac Weeks (15) sells Bitcoin-themed 3D prints including Lightning Piggy banks, Bitcoin keyfobs, and Seed Signer cases.',
     specialty: 'Bitcoin Hardware & 3D Prints',
     npub: 'npub1yy0nyk6nj6tg4sx8nd7q5qcdw6pqd5e2cc0e8u2rmcgjhpvm63hsk67xe5',
-  },
-  {
-    pubkey: 'e67b0de75a95236e7cadd7097d50c6c76aca8aaa8780a109869750e415b45a75',
-    name: 'Plebeian Market',
-    description:
-      'A decentralized marketplace built on Nostr. Buy and sell products using Bitcoin Lightning payments.',
-    specialty: 'Nostr Marketplace',
-    npub: 'npub1ueasme66j53kul9d6uyh65xxca4v4z42s7q2zzvxjagwg9d5tf6sdzlv25',
   },
 ];
 

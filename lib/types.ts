@@ -93,7 +93,9 @@ export const GINI3D_NPUB =
 const sellerWhitelistEnv = process.env.NEXT_PUBLIC_SELLER_WHITELIST || GINI3D_PUBKEY;
 export const FEATURED_SELLERS = sellerWhitelistEnv.split(',').filter((s) => s.trim());
 
-// Seller metadata for display (add names for known sellers)
+// Seller metadata for display (fallback names for known sellers)
+// Note: The primary source for seller names is their Nostr profile (kind 0)
+// This is only used as a fallback if the profile isn't available
 export const SELLER_METADATA: Record<string, { name: string; specialty: string; npub?: string }> = {
   d887f1a249412f06d7c043d70aca17d326ba0d26ddfa1793d7bab5a141737412: {
     name: 'Gini3D',
@@ -103,10 +105,5 @@ export const SELLER_METADATA: Record<string, { name: string; specialty: string; 
     name: 'Robotechy',
     specialty: 'Bitcoin Hardware & 3D Prints',
     npub: 'npub1yy0nyk6nj6tg4sx8nd7q5qcdw6pqd5e2cc0e8u2rmcgjhpvm63hsk67xe5',
-  },
-  e67b0de75a95236e7cadd7097d50c6c76aca8aaa8780a109869750e415b45a75: {
-    name: 'Plebeian Market',
-    specialty: 'Nostr Marketplace',
-    npub: 'npub1ueasme66j53kul9d6uyh65xxca4v4z42s7q2zzvxjagwg9d5tf6sdzlv25',
   },
 };

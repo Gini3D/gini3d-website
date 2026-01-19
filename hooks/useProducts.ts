@@ -97,23 +97,54 @@ export function useProduct(naddr: string) {
 
         const { pubkey, kind, identifier } = decoded.data;
 
-        // Fetch the specific event
-        const filter = {
-          kinds: [kind],
-          authors: [pubkey],
-          '#d': [identifier],
-          limit: 1,
-        };
+        // Fetch the product event and seller profile in parallel
+        const [productEvents, profileEvents] = await Promise.all([
+          fetchEvents(
+            {
+              kinds: [kind],
+              authors: [pubkey],
+              '#d': [identifier],
+              limit: 1,
+            },
+            DEFAULT_RELAYS
+          ),
+          fetchEvents(
+            {
+              kinds: [0], // Profile metadata
+              authors: [pubkey],
+              limit: 1,
+            },
+            DEFAULT_RELAYS
+          ),
+        ]);
 
-        const events = await fetchEvents(filter, DEFAULT_RELAYS);
-
-        if (events.length === 0) {
+        if (productEvents.length === 0) {
           throw new Error('Product not found');
         }
 
-        const parsed = parseClassifiedListing(events[0]);
+        const parsed = parseClassifiedListing(productEvents[0]);
         if (!parsed) {
           throw new Error('Failed to parse product');
+        }
+
+        // Add seller profile if available
+        if (profileEvents.length > 0) {
+          try {
+            const profileData = JSON.parse(profileEvents[0].content);
+            const npub = nip19.npubEncode(pubkey);
+            parsed.seller = {
+              pubkey,
+              name: profileData.name,
+              displayName: profileData.display_name || profileData.displayName,
+              picture: profileData.picture,
+              banner: profileData.banner,
+              about: profileData.about,
+              nip05: profileData.nip05,
+              npub,
+            };
+          } catch {
+            // Profile parsing failed, continue without seller info
+          }
         }
 
         setProduct(parsed);
