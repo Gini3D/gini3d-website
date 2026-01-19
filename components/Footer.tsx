@@ -23,7 +23,7 @@ export function Footer() {
             </p>
             <div className="text-foreground/60 flex items-center gap-1 text-sm">
               <Heart className="h-4 w-4 text-[#ff6b9d]" />
-              <span className="font-elegance">Made with love in 2024</span>
+              <span className="font-elegance">Made with love in 2026</span>
             </div>
           </div>
 
