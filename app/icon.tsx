@@ -8,17 +8,38 @@ export default function Icon() {
   return new ImageResponse(
     <div
       style={{
-        fontSize: 24,
-        background: 'linear-gradient(135deg, #fdf2f8 0%, #fce7f3 50%, #fbcfe8 100%)',
         width: '100%',
         height: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        borderRadius: '6px',
+        background: 'transparent',
       }}
     >
-      🐹
+      {/* Pink Guinea Pig Face */}
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        {/* Main face - pink */}
+        <ellipse cx="16" cy="17" rx="14" ry="12" fill="#f9a8d4" />
+        {/* Left ear */}
+        <ellipse cx="5" cy="8" rx="4" ry="5" fill="#f472b6" />
+        <ellipse cx="5" cy="8" rx="2.5" ry="3" fill="#fbcfe8" />
+        {/* Right ear */}
+        <ellipse cx="27" cy="8" rx="4" ry="5" fill="#f472b6" />
+        <ellipse cx="27" cy="8" rx="2.5" ry="3" fill="#fbcfe8" />
+        {/* Left eye */}
+        <circle cx="10" cy="15" r="3" fill="#1f2937" />
+        <circle cx="11" cy="14" r="1" fill="white" />
+        {/* Right eye */}
+        <circle cx="22" cy="15" r="3" fill="#1f2937" />
+        <circle cx="23" cy="14" r="1" fill="white" />
+        {/* Nose */}
+        <ellipse cx="16" cy="21" rx="3" ry="2" fill="#ec4899" />
+        {/* Mouth */}
+        <path d="M14 24 Q16 26 18 24" stroke="#be185d" strokeWidth="1.5" fill="none" />
+        {/* Cheek blush */}
+        <ellipse cx="7" cy="20" rx="2" ry="1.5" fill="#f472b6" opacity="0.6" />
+        <ellipse cx="25" cy="20" rx="2" ry="1.5" fill="#f472b6" opacity="0.6" />
+      </svg>
     </div>,
     {
       ...size,

@@ -18,10 +18,10 @@ A cute 3D print marketplace run by **Nini & Gabby** (two 10-year-old best friend
 
 ## Tech Stack
 
-- **Framework**: Next.js 14+ (App Router)
-- **Styling**: TailwindCSS + shadcn/ui
-- **Nostr**: nostr-tools
-- **Protocol**: NIP-99 (kind 30402) + Gamma Markets spec
+- ⚛️ **Framework**: Next.js 14+ (App Router)
+- 🎨 **Styling**: TailwindCSS + shadcn/ui
+- 🔮 **Nostr**: nostr-tools
+- 📋 **Protocol**: NIP-99 (kind 30402) + Gamma Markets spec
 
 ## Getting Started
 
