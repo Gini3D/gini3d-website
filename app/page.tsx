@@ -100,7 +100,7 @@ export default function Home() {
             ].map((category) => (
               <button
                 key={category.name}
-                className={`${category.color} hover-lift rounded-xl border border-white/50 p-6 text-center`}
+                className={`${category.color} hover-lift rounded-xl border border-white/50 p-6 text-center cursor-pointer`}
               >
                 <div className="mb-2 text-3xl">{category.emoji}</div>
                 <span className="font-elegance text-foreground/80">{category.name}</span>
@@ -124,7 +124,7 @@ export default function Home() {
             </p>
             <Button
               variant="outline"
-              className="border-primary text-primary hover:bg-gini-50 font-elegance"
+              className="border-primary text-primary hover:bg-gini-50 font-elegance cursor-pointer"
             >
               <Heart className="mr-2 h-4 w-4" />
               Learn More About Us
