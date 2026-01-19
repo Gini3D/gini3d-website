@@ -62,3 +62,5 @@ MIT
 ---
 
 🧡💜 Made with love by Nini & Gabby 💜🧡
+
+⚡ Powered by Nostr and Bitcoin Lightning
