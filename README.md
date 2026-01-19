@@ -41,7 +41,6 @@ We feature pre-selected sellers who specialize in 3D printing on Nostr:
 
 - **Gini3D** - Cute & Colorful Prints (by Nini & Gabby)
 - **Robotechy** - Bitcoin Hardware & 3D Prints (by Isaac, 15)
-- **Plebeian Market** - Nostr Marketplace
 
 Want to sell on Gini3D? [Contact us](/contact)!
 
