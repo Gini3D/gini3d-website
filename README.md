@@ -1,10 +1,8 @@
-<p align="center">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="assets/logo.svg">
-    <source media="(prefers-color-scheme: light)" srcset="assets/logo.svg">
-    <img alt="Gini3D" src="assets/logo.svg" width="600">
-  </picture>
-</p>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="assets/logo.svg">
+  <source media="(prefers-color-scheme: light)" srcset="assets/logo.svg">
+  <img alt="Gini3D" src="assets/logo.svg" width="500">
+</picture>
 
 # Gini3D - Adorable 3D Printed Creations
 
