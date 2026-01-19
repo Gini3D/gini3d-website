@@ -61,4 +61,4 @@ MIT
 
 ---
 
-Made with love by Nini & Gabby
+🧡💜 Made with love by Nini & Gabby 💜🧡
