@@ -31,6 +31,18 @@ bun install
 
 # Run development server
 bun dev
+
+# Format code
+bun format
+
+# Check formatting
+bun format:check
+
+# Lint code
+bun lint
+
+# Type check
+bun typecheck
 ```
 
 Open [http://localhost:3000](http://localhost:3000) to see the site.
