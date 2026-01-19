@@ -10,11 +10,11 @@ A cute 3D print marketplace run by **Nini & Gabby** (two 10-year-old best friend
 
 ## Features
 
-- **NIP-99 Product Listings** - Decentralized product catalog from Nostr relays
-- **Bitcoin Lightning Payments** - Fast, low-fee payments via Lightning Network
-- **NIP-07 Login** - Sign in with browser extensions (Alby, nos2x)
-- **Pre-selected Sellers** - Curated 3D printing specialists on Nostr
-- **Gamma Markets Checkout** - Kind 16/17 order processing
+- 📦 **NIP-99 Product Listings** - Decentralized product catalog from Nostr relays
+- ⚡ **Bitcoin Lightning Payments** - Fast, low-fee payments via Lightning Network
+- 🔐 **NIP-07 Login** - Sign in with browser extensions (Alby, nos2x)
+- 🏪 **Pre-selected Sellers** - Curated 3D printing specialists on Nostr
+- 🛒 **Gamma Markets Checkout** - Kind 16/17 order processing
 
 ## Tech Stack
 
