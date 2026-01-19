@@ -1,10 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import Image from 'next/image';
 
-import { Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
+import { Minus, Plus, RefreshCw, ShoppingBag, Trash2, Zap } from 'lucide-react';
 
 import { CheckoutDialog } from '@/components/checkout/CheckoutDialog';
 import { Button } from '@/components/ui/button';
@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/sheet';
 
 import { useCart } from '@/hooks/useCart';
+import { useExchangeRates } from '@/hooks/useExchangeRates';
 
 export function CartDrawer() {
   const {
@@ -25,13 +26,28 @@ export function CartDrawer() {
     isOpen,
     setIsOpen,
     totalItems,
-    totalPrice,
-    currency,
     clearCart,
     removeItem,
     updateQuantity,
   } = useCart();
+  const { rates, loading: ratesLoading, convertToSats, refresh: refreshRates } = useExchangeRates();
   const [checkoutOpen, setCheckoutOpen] = useState(false);
+
+  // Calculate total in sats using exchange rates
+  const { totalSats, itemSats } = useMemo(() => {
+    const itemSatsMap = new Map<string, number>();
+    let total = 0;
+
+    for (const item of items) {
+      const amount = parseFloat(item.product.price.amount) || 0;
+      const currency = item.product.price.currency;
+      const sats = convertToSats(amount, currency) * item.quantity;
+      itemSatsMap.set(item.product.id, sats / item.quantity); // Store per-item sats
+      total += sats;
+    }
+
+    return { totalSats: total, itemSats: itemSatsMap };
+  }, [items, convertToSats]);
 
   const handleCheckout = () => {
     setIsOpen(false);
@@ -43,10 +59,21 @@ export function CartDrawer() {
 
   const formatPrice = (amount: string | number, curr: string) => {
     const num = typeof amount === 'string' ? parseFloat(amount) : amount;
-    if (curr.toLowerCase() === 'sats' || curr.toLowerCase() === 'sat') {
+    const currLower = curr.toLowerCase();
+    if (currLower === 'sats' || currLower === 'sat') {
       return `${num.toLocaleString()} sats`;
     }
+    if (currLower === 'gbp' || curr === '£') {
+      return `£${num.toFixed(2)}`;
+    }
+    if (currLower === 'eur' || curr === '€') {
+      return `€${num.toFixed(2)}`;
+    }
     return `$${num.toFixed(2)}`;
+  };
+
+  const formatSats = (sats: number) => {
+    return `${Math.round(sats).toLocaleString()} sats`;
   };
 
   return (
@@ -112,9 +139,17 @@ export function CartDrawer() {
                         <h4 className="font-fun text-sm leading-tight font-medium">
                           {item.product.title}
                         </h4>
-                        <p className="text-gini-600 mt-1 text-sm font-medium">
-                          {formatPrice(item.product.price.amount, item.product.price.currency)}
-                        </p>
+                        <div className="mt-1 flex items-center gap-2">
+                          <span className="text-gini-600 text-sm font-medium">
+                            {formatPrice(item.product.price.amount, item.product.price.currency)}
+                          </span>
+                          {item.product.price.currency.toLowerCase() !== 'sats' &&
+                            item.product.price.currency.toLowerCase() !== 'sat' && (
+                              <span className="text-muted-foreground text-xs">
+                                ≈ {formatSats(itemSats.get(item.product.id) || 0)}
+                              </span>
+                            )}
+                        </div>
 
                         {/* Quantity Controls */}
                         <div className="mt-2 flex items-center gap-2">
@@ -166,20 +201,43 @@ export function CartDrawer() {
                   </Button>
                 )}
 
-                <div className="mb-4 flex items-center justify-between">
+                {/* Total in Sats */}
+                <div className="mb-2 flex items-center justify-between">
                   <span className="font-fun text-lg font-medium">Total:</span>
-                  <span className="text-gini-600 font-fun text-xl font-bold">
-                    {formatPrice(totalPrice, currency)}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-yellow-500" />
+                    <span className="text-gini-600 font-fun text-xl font-bold">
+                      {formatSats(totalSats)}
+                    </span>
+                  </div>
                 </div>
+
+                {/* Exchange Rate Info */}
+                {rates && (
+                  <div className="mb-4 flex items-center justify-between">
+                    <span className="text-muted-foreground text-xs">
+                      Rate: 1 BTC = £{rates.BTCGBP.toLocaleString()}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-muted-foreground hover:text-foreground h-6 px-2 text-xs"
+                      onClick={refreshRates}
+                      disabled={ratesLoading}
+                    >
+                      <RefreshCw className={`mr-1 h-3 w-3 ${ratesLoading ? 'animate-spin' : ''}`} />
+                      {ratesLoading ? 'Updating...' : 'Refresh'}
+                    </Button>
+                  </div>
+                )}
 
                 <Button
                   onClick={handleCheckout}
                   className="btn-fun bg-gini-heart hover:bg-gini-500 w-full"
                   size="lg"
                 >
-                  <ShoppingBag className="mr-2 h-5 w-5" />
-                  Checkout
+                  <Zap className="mr-2 h-5 w-5" />
+                  Pay {formatSats(totalSats)}
                 </Button>
 
                 <p className="text-muted-foreground mt-3 text-center text-xs">

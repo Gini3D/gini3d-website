@@ -79,6 +79,7 @@ export default function SellersPage() {
               name: profile.name,
               displayName: profile.display_name || profile.displayName,
               picture: profile.picture,
+              banner: profile.banner,
               about: profile.about,
               nip05: profile.nip05,
               npub: pubkeyToNpub(event.pubkey),
@@ -122,25 +123,41 @@ export default function SellersPage() {
           const profile = profiles.get(seller.pubkey);
           const displayName = profile?.displayName || profile?.name || seller.name;
           const picture = profile?.picture || seller.picture;
+          const banner = profile?.banner;
           const about = profile?.about || seller.description;
 
           return (
             <Card key={seller.pubkey} className="card-cute hover-lift overflow-hidden">
-              <CardHeader className="bg-gini-gradient pb-4">
+              {/* Banner Image */}
+              <div className="relative h-32 w-full overflow-hidden">
+                {banner ? (
+                  <Image
+                    src={banner}
+                    alt={`${displayName} banner`}
+                    fill
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <div className="bg-gini-gradient h-full w-full" />
+                )}
+              </div>
+
+              <CardHeader className="pt-4 pb-2">
                 <div className="flex items-start gap-4">
-                  {/* Seller Avatar */}
-                  <div className="relative">
+                  {/* Avatar */}
+                  <div className="relative -mt-12 shrink-0">
                     {picture ? (
                       <Image
                         src={picture}
                         alt={displayName}
-                        width={80}
-                        height={80}
+                        width={72}
+                        height={72}
                         className="rounded-full border-4 border-white shadow-lg"
                         unoptimized
                       />
                     ) : (
-                      <div className="from-gini-300 to-gini-500 flex h-20 w-20 items-center justify-center rounded-full border-4 border-white bg-gradient-to-br text-3xl shadow-lg">
+                      <div className="from-gini-300 to-gini-500 flex h-[72px] w-[72px] items-center justify-center rounded-full border-4 border-white bg-gradient-to-br text-3xl shadow-lg">
                         {index === 0 ? '🐹' : '🤖'}
                       </div>
                     )}
@@ -148,16 +165,16 @@ export default function SellersPage() {
                       <span className="wiggle absolute -top-1 -right-1 text-xl">🎀</span>
                     )}
                   </div>
-
-                  <div className="flex-1">
-                    <CardTitle className="font-fun flex items-center gap-2 text-2xl">
+                  {/* Name and Badge */}
+                  <div className="min-w-0 pt-1">
+                    <CardTitle className="font-fun flex items-center gap-2 text-xl">
                       {displayName}
                       {index === 0 && <span className="sparkle text-sm">✨</span>}
                     </CardTitle>
                     <CardDescription className="mt-1">
                       <Badge
                         variant="secondary"
-                        className="text-gini-600 font-fun bg-white/80 text-xs"
+                        className="text-gini-600 font-fun bg-gini-100 text-xs"
                       >
                         {seller.specialty}
                       </Badge>
@@ -166,7 +183,7 @@ export default function SellersPage() {
                 </div>
               </CardHeader>
 
-              <CardContent className="pt-4">
+              <CardContent className="pt-2">
                 <p className="text-muted-foreground mb-4 text-sm leading-relaxed">{about}</p>
 
                 <div className="flex flex-wrap gap-2">
@@ -174,7 +191,7 @@ export default function SellersPage() {
                     <Button
                       variant="outline"
                       size="sm"
-                      className="border-gini-300 hover:bg-gini-100 font-fun"
+                      className="border-gini-300 hover:bg-gini-100 font-fun cursor-pointer"
                     >
                       <Zap className="mr-1 h-4 w-4 text-yellow-500" />
                       View Products
@@ -185,7 +202,7 @@ export default function SellersPage() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-gini-purple hover:bg-gini-100 font-fun"
+                      className="text-gini-purple hover:bg-gini-100 font-fun cursor-pointer"
                       onClick={() => navigator.clipboard.writeText(seller.npub)}
                     >
                       <ExternalLink className="mr-1 h-4 w-4" />
