@@ -139,28 +139,27 @@ export function LoginDialog({ open, onOpenChange }: LoginDialogProps) {
                 )}
                 Login with Extension
               </Button>
-              {!isExtensionAvailable && (
-                <p className="text-muted-foreground text-xs">
-                  No extension detected.{' '}
-                  <a
-                    href="https://getalby.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gini-purple hover:underline"
-                  >
-                    Get Alby
-                  </a>{' '}
-                  or{' '}
-                  <a
-                    href="https://github.com/nickytonline/nos2x-firefox"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-gini-purple hover:underline"
-                  >
-                    nos2x
-                  </a>
-                </p>
-              )}
+              <p className="text-muted-foreground text-xs">
+                {!isExtensionAvailable && 'No extension detected. '}
+                Get a Nostr extension:{' '}
+                <a
+                  href="https://getalby.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gini-purple hover:underline"
+                >
+                  Alby
+                </a>{' '}
+                or{' '}
+                <a
+                  href="https://chromewebstore.google.com/detail/nos2x/kpgefcfmnafjgpblomihpgmejjdanjjp"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-gini-purple hover:underline"
+                >
+                  nos2x
+                </a>
+              </p>
             </div>
           )}
 
