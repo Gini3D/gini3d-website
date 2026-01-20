@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from 'react';
 
+import Link from 'next/link';
+
 import { Filter, Heart, Search } from 'lucide-react';
 
 import { HeroSection } from '@/components/HeroSection';
@@ -122,13 +124,15 @@ export default function Home() {
               We&apos;re two 10-year-old best friends who love guinea pigs and creating cute things!
               We started Gini3D to share our 3D printed creations with the world.
             </p>
-            <Button
-              variant="outline"
-              className="border-primary text-primary hover:bg-gini-50 font-elegance cursor-pointer"
-            >
-              <Heart className="mr-2 h-4 w-4" />
-              Learn More About Us
-            </Button>
+            <Link href="/about">
+              <Button
+                variant="outline"
+                className="border-primary text-primary hover:bg-gini-50 font-elegance cursor-pointer"
+              >
+                <Heart className="mr-2 h-4 w-4" />
+                Learn More About Us
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
