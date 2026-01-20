@@ -20,8 +20,7 @@ import { useExchangeRates } from '@/hooks/useExchangeRates';
 import { useStalls } from '@/hooks/useStalls';
 
 import type { ShippingInfo } from '@/lib/cartTypes';
-import { type SellerOrder, groupCartBySeller } from '@/lib/productUtils';
-import { SELLER_METADATA } from '@/lib/types';
+import { groupCartBySeller } from '@/lib/productUtils';
 
 import { OrderConfirmation } from './OrderConfirmation';
 import { PaymentDisplay } from './PaymentDisplay';
@@ -41,7 +40,7 @@ export function CheckoutDialog({ open, onOpenChange }: CheckoutDialogProps) {
 
   // Group cart items by seller
   const sellerOrders = useMemo(() => {
-    return groupCartBySeller(items, convertToSats, SELLER_METADATA);
+    return groupCartBySeller(items, convertToSats);
   }, [items, convertToSats]);
 
   // Get unique seller pubkeys for stall lookup

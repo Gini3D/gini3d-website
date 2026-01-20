@@ -21,7 +21,6 @@ import { useCart } from '@/hooks/useCart';
 import { useExchangeRates } from '@/hooks/useExchangeRates';
 
 import { type SellerOrder, calculateGrandTotal, groupCartBySeller } from '@/lib/productUtils';
-import { SELLER_METADATA } from '@/lib/types';
 
 export function CartDrawer() {
   const { items, isOpen, setIsOpen, totalItems, clearCart, removeItem, updateQuantity } = useCart();
@@ -30,7 +29,7 @@ export function CartDrawer() {
 
   // Group cart items by seller and calculate totals
   const { sellerOrders, grandTotal } = useMemo(() => {
-    const orders = groupCartBySeller(items, convertToSats, SELLER_METADATA);
+    const orders = groupCartBySeller(items, convertToSats);
     const total = calculateGrandTotal(orders);
     return { sellerOrders: orders, grandTotal: total };
   }, [items, convertToSats]);
