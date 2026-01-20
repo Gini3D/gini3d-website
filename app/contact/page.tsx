@@ -14,7 +14,6 @@ import { GINI3D_NPUB } from '@/lib/types';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
-    name: '',
     subject: '',
     message: '',
   });
@@ -146,21 +145,6 @@ export default function ContactPage() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="name" className="font-fun">
-                  Your Name 🐹
-                </Label>
-                <Input
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder="What should we call you?"
-                  required
-                  className="border-gini-200 focus:border-gini-heart"
-                />
-              </div>
-
               <div className="space-y-2">
                 <Label htmlFor="subject" className="font-fun">
                   Subject ✨
