@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-import { Mail, MessageCircle, Send, ShoppingBag, Sparkles, Star } from 'lucide-react';
+import { MessageCircle, Send, ShoppingBag, Sparkles, Star } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,7 +15,6 @@ import { GINI3D_NPUB } from '@/lib/types';
 export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
-    email: '',
     subject: '',
     message: '',
   });
@@ -163,22 +162,6 @@ export default function ContactPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email" className="font-fun">
-                  Email Address 📧
-                </Label>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder="your@email.com"
-                  required
-                  className="border-gini-200 focus:border-gini-heart"
-                />
-              </div>
-
-              <div className="space-y-2">
                 <Label htmlFor="subject" className="font-fun">
                   Subject ✨
                 </Label>
@@ -231,6 +214,9 @@ export default function ContactPage() {
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
                 Have a Nostr account? Send us a direct message!
+              </p>
+              <p className="text-muted-foreground text-sm">
+                Note: Messages are monitored by our parents for safety.
               </p>
               <div className="rounded-lg bg-white/50 p-3">
                 <p className="mb-1 text-sm font-medium">Our Nostr npub:</p>
@@ -292,24 +278,6 @@ export default function ContactPage() {
             </CardContent>
           </Card>
 
-          {/* Email Option */}
-          <Card className="hover-lift">
-            <CardHeader>
-              <CardTitle className="font-fun flex items-center gap-2 text-xl">
-                <Mail className="text-gini-orange h-5 w-5" />
-                Email Us
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-3">Prefer email? No problem!</p>
-              <a
-                href="mailto:hello@gini3d.com"
-                className="font-fun text-gini-purple hover:underline"
-              >
-                hello@gini3d.com
-              </a>
-            </CardContent>
-          </Card>
         </div>
       </div>
 
